@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Samadhaan leaf">
+  <defs>
+    <linearGradient id="leaf" x1="12" y1="56" x2="52" y2="8" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#059669"/>
+      <stop offset="0.55" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#ecfdf5"/>
+  <path fill="url(#leaf)" d="M50.9 8.4c-13.7 1.1-24.4 5.7-31.6 13.5-6.5 7.1-8.7 16.7-6 25.1l-5 5a3 3 0 1 0 4.2 4.2l5-5c8.4 2.7 18 .5 25.1-6 7.8-7.2 12.4-17.9 13.5-31.6.2-3-2.2-5.4-5.2-5.2Zm-28 34.4c2.9-9.2 10.2-16.5 20.6-20.9-7.7 5.6-13.5 12.3-17.3 20.1-.8 1.6-2.1 2-3.3.8Z"/>
+</svg>

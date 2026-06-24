@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm ci --prefer-offline --no-audit && npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
