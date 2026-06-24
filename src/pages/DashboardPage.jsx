@@ -90,42 +90,170 @@ function ResolutionRadial({ percent }) {
 }
 
 /** Sparkline from last N days of volume */
+const getTrailingDates = () => {
+  const result = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    result.push(d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }));
+  }
+  return result;
+};
+
+const getTrailingDays = () => {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const result = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    result.push(days[d.getDay()]);
+  }
+  return result;
+};
+
+/** Sparkline from last N days of volume */
 function TrendSparkline({ points }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null);
   if (!points.length) return null;
-  const w = 280;
-  const h = 96;
+
+  const w = 500;
+  const h = 120;
+  const chartH = 92;
   const max = Math.max(...points, 1);
   const step = w / Math.max(points.length - 1, 1);
+
   const d = points
-    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${i * step} ${h - (p / max) * (h - 12) - 6}`)
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${i * step} ${chartH - (p / max) * (chartH - 24) - 12}`)
     .join(' ');
+
+  const areaD = `${d} L ${w} ${chartH} L 0 ${chartH} Z`;
+
+  const days = getTrailingDays();
+  const dates = getTrailingDates();
+
+  const hoverX = hoveredIdx !== null ? hoveredIdx * step : 0;
+  const hoverY = hoveredIdx !== null ? chartH - (points[hoveredIdx] / max) * (chartH - 24) - 12 : 0;
+
   return (
-    <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="overflow-visible">
-      <defs>
-        <linearGradient id="lineGlow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={w} y2="0">
-          <stop offset="0%" stopColor="#10b981" stopOpacity="0.35" />
-          <stop offset="50%" stopColor="#0ea5e9" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.45" />
-        </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="2" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      <motion.path
-        d={d}
-        fill="none"
-        stroke="url(#lineGlow)"
-        strokeWidth="2.5"
-        filter="url(#glow)"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ duration: 1.4, ease: 'easeInOut' }}
-      />
-    </svg>
+    <div className="relative w-full h-full group/chart">
+      <svg width="100%" height="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="overflow-visible">
+        <defs>
+          <linearGradient id="lineGlow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={w} y2="0">
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#0ea5e9" stopOpacity="1" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.5" />
+          </linearGradient>
+          <linearGradient id="areaGlow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0" />
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Horizontal Gridlines */}
+        <line x1="0" y1="12" x2={w} y2="12" stroke="rgba(148, 163, 184, 0.08)" strokeDasharray="3 3" />
+        <line x1="0" y1="48" x2={w} y2="48" stroke="rgba(148, 163, 184, 0.08)" strokeDasharray="3 3" />
+        <line x1="0" y1="84" x2={w} y2="84" stroke="rgba(148, 163, 184, 0.08)" strokeDasharray="3 3" />
+
+        {/* Area Under Curve */}
+        <motion.path
+          d={areaD}
+          fill="url(#areaGlow)"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        />
+
+        {/* Stroke Line */}
+        <motion.path
+          d={d}
+          fill="none"
+          stroke="url(#lineGlow)"
+          strokeWidth="3"
+          filter="url(#glow)"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration: 1.4, ease: 'easeInOut' }}
+        />
+
+        {/* Vertical Tracker Guide Line */}
+        {hoveredIdx !== null && (
+          <line
+            x1={hoverX}
+            y1={4}
+            x2={hoverX}
+            y2={chartH}
+            stroke="rgba(14, 165, 233, 0.3)"
+            strokeDasharray="3 3"
+            strokeWidth="1.5"
+          />
+        )}
+
+        {/* Highlighted Marker Circle */}
+        {hoveredIdx !== null && (
+          <>
+            <circle cx={hoverX} cy={hoverY} r="7" fill="#0ea5e9" opacity="0.3" />
+            <circle cx={hoverX} cy={hoverY} r="4.5" fill="#0ea5e9" stroke="#ffffff" strokeWidth="2" />
+          </>
+        )}
+
+        {/* X-Axis Labels */}
+        {days.map((day, i) => (
+          <text
+            key={i}
+            x={i * step}
+            y={h - 6}
+            textAnchor={i === 0 ? 'start' : i === days.length - 1 ? 'end' : 'middle'}
+            className="text-[9px] font-bold tracking-wider fill-slate-400 font-mono uppercase"
+          >
+            {day}
+          </text>
+        ))}
+
+        {/* Hover Target Overlay Columns */}
+        {points.map((_, i) => {
+          const colW = w / (points.length - 1);
+          const colX = i === 0 ? 0 : i * step - colW / 2;
+          const actualColW = i === 0 || i === points.length - 1 ? colW / 2 : colW;
+          return (
+            <rect
+              key={i}
+              x={colX}
+              y={0}
+              width={actualColW}
+              height={chartH}
+              fill="transparent"
+              className="cursor-pointer"
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+            />
+          );
+        })}
+      </svg>
+
+      {/* Floating HTML Tooltip */}
+      {hoveredIdx !== null && (
+        <div
+          className="absolute z-10 bg-slate-900/95 text-white px-3 py-2 rounded-xl text-xs pointer-events-none shadow-2xl border border-slate-800 flex flex-col font-mono min-w-[100px] backdrop-blur-md"
+          style={{
+            left: `${(hoverX / w) * 100}%`,
+            top: `${(hoverY / h) * 100 - 55}%`,
+            transform: 'translateX(-50%)',
+          }}
+        >
+          <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{dates[hoveredIdx]}</span>
+          <span className="font-extrabold text-sky-400 mt-0.5 text-sm">
+            {points[hoveredIdx]} {points[hoveredIdx] === 1 ? 'complaint' : 'complaints'}
+          </span>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -688,16 +816,23 @@ function DashboardPage() {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-sky-500/10" />
-                <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 text-emerald-600">
-                      <Activity className="h-5 w-5" />
-                      <span className="text-xs font-semibold uppercase tracking-widest">Ingest volume</span>
+                <div className="flex flex-col gap-5">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 text-emerald-600">
+                        <Activity className="h-5 w-5 animate-pulse" />
+                        <span className="text-xs font-semibold uppercase tracking-widest">Ingest volume</span>
+                      </div>
+                      <div className="flex items-baseline gap-2 mt-1.5">
+                        <span className="font-space-grotesk text-3xl font-extrabold text-slate-900">{stats.total}</span>
+                        <span className="text-xs text-slate-500">complaints · trailing 7 days</span>
+                      </div>
                     </div>
-                    <p className="font-space-grotesk mt-2 text-3xl font-extrabold text-slate-900">{stats.total}</p>
-                    <p className="text-xs text-slate-500">Cases · trailing 7-day window</p>
+                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50/70 px-2.5 py-1 rounded-full border border-emerald-100/50 uppercase tracking-wider">
+                      Live tracking
+                    </span>
                   </div>
-                  <div className="min-h-[96px] flex-1 sm:max-w-[55%]">
+                  <div className="h-[120px] w-full mt-1">
                     <TrendSparkline points={trendPoints} />
                   </div>
                 </div>
