@@ -19,16 +19,18 @@ import {
   Command,
   Sparkles,
   Leaf,
+  Trophy,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Command', icon: LayoutDashboard },
+  { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
   { id: 'submit', label: 'File grievance', icon: FilePlus2 },
   { id: 'mycomplaints', label: 'My cases', icon: ListChecks },
   { id: 'profile', label: 'Profile', icon: User },
 ];
 
-function Layout({ children, onNavigate }) {
+function Layout({ children, onNavigate, currentPage }) {
   const {
     user,
     isAuthority,
@@ -155,10 +157,16 @@ function Layout({ children, onNavigate }) {
                   onClick={() => onNavigate(item.id)}
                   className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition ${
                     sidebarCollapsed ? 'justify-center' : ''
-                  } text-slate-600 hover:bg-emerald-50 hover:text-emerald-700`}
+                  } ${
+                    currentPage === item.id
+                      ? 'bg-emerald-50 text-emerald-700 font-bold border-l-2 border-emerald-500 shadow-sm'
+                      : 'text-slate-600 hover:bg-emerald-50/50 hover:text-emerald-700'
+                  }`}
                   title={item.label}
                 >
-                  <Icon className="h-5 w-5 shrink-0 text-emerald-500 transition group-hover:text-emerald-600" />
+                  <Icon className={`h-5 w-5 shrink-0 transition ${
+                    currentPage === item.id ? 'text-emerald-600' : 'text-emerald-500 group-hover:text-emerald-600'
+                  }`} />
                   {!sidebarCollapsed && <span>{item.label}</span>}
                 </motion.button>
               );

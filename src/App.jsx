@@ -13,6 +13,7 @@ import Layout from "./components/Layout";
 import MyComplaintsPage from "./pages/MyComplaintsPage";
 import ProfilePage from "./pages/ProfilePage";
 import SubmitGrievancePage from "./pages/SubmitGrievancePage";
+import LeaderboardPage from "./pages/LeaderboardPage";
 import { GlobalSpinner } from "./components/ui";
 
 
@@ -60,6 +61,8 @@ function Main() {
     switch (currentPage) {
       case "dashboard":
         return <DashboardPage />;
+      case "leaderboard":
+        return <LeaderboardPage />;
       case "submit":
         return <SubmitGrievancePage onGrievanceSubmitted={handleGrievanceSubmitted} />;
       case "mycomplaints":
@@ -72,7 +75,7 @@ function Main() {
   };
 
   return (
-    <Layout onNavigate={handleNavigate}>
+    <Layout onNavigate={handleNavigate} currentPage={currentPage}>
       <AnimatePresence mode="wait">
         {renderPage()}
       </AnimatePresence>

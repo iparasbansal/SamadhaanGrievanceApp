@@ -265,7 +265,7 @@ router.put('/:id', attachUser, async (req, res) => {
       updates.status = status;
     }
 
-    const grievance = await Grievance.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true });
+    const grievance = await Grievance.findByIdAndUpdate(req.params.id, updates, { new: true });
 
     if (!grievance) {
       return res.status(404).json({ error: 'Grievance not found' });
