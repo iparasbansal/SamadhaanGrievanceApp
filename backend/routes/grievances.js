@@ -36,19 +36,24 @@ const fs = require('fs');
 const path = require('path');
 
 function saveBase64Image(base64Str) {
-  if (!base64Str || !base64Str.startsWith('data:image/')) {
+  if (!base64Str || typeof base64Str !== 'string' || !base64Str.startsWith('data:image/')) {
     return base64Str;
   }
 
   try {
-    const mimeType = base64Str.split(';')[0].split(':')[1];
+    const parts = base64Str.split(';');
+    const mimeType = parts[0]?.split(':')[1] || '';
     const ext = mimeType.split('/')[1] || 'jpg';
     const base64Data = base64Str.replace(/^data:image\/\w+;base64,/, "");
     const buffer = Buffer.from(base64Data, 'base64');
 
     const fileName = `img-${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
-    const filePath = path.join(__dirname, '../uploads', fileName);
+    const uploadsDir = path.join(__dirname, '../uploads');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
 
+    const filePath = path.join(uploadsDir, fileName);
     fs.writeFileSync(filePath, buffer);
     return `/uploads/${fileName}`;
   } catch (err) {
@@ -228,10 +233,14 @@ router.put('/:id', attachUser, async (req, res) => {
           ? { url: req.body.resolutionPhoto }
           : req.body.resolutionPhoto;
 
+      if (!photo || typeof photo.url !== 'string') {
+        return res.status(400).json({ error: 'Resolution photo must be an uploaded image' });
+      }
+
       let savedUrl = photo.url;
-      if (photo.url && photo.url.startsWith('data:image/')) {
+      if (photo.url.startsWith('data:image/')) {
         savedUrl = saveBase64Image(photo.url);
-      } else if (!photo.url || (!photo.url.startsWith('data:image/') && !photo.url.startsWith('/uploads/'))) {
+      } else if (!photo.url.startsWith('/uploads/')) {
         return res.status(400).json({ error: 'Resolution photo must be an uploaded image' });
       }
 
