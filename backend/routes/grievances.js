@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const Grievance = require('../models/Grievance');
 const User = require('../models/User');
 
@@ -111,10 +112,26 @@ router.get('/', attachUser, async (req, res) => {
       .skip(skip)
       .lean();
 
+    // Dynamically resolve submitter names from User collection
+    const userIds = [...new Set(grievances.map(g => g.submitterUserId).filter(id => id && mongoose.Types.ObjectId.isValid(id)))];
+    const users = await User.find({ _id: { $in: userIds } }).select('firstName lastName').lean();
+    const userMap = {};
+    users.forEach(u => {
+      userMap[u._id.toString()] = `${u.firstName} ${u.lastName}`;
+    });
+
+    const enrichedGrievances = grievances.map(g => {
+      const resolvedName = g.submitterUserId ? userMap[g.submitterUserId.toString()] : null;
+      return {
+        ...g,
+        submitterName: resolvedName || g.submitterName || 'Anonymous Citizen'
+      };
+    });
+
     const total = await Grievance.countDocuments(query);
 
     res.json({
-      data: grievances,
+      data: enrichedGrievances,
       pagination: {
         page,
         limit,
@@ -155,6 +172,14 @@ router.post('/', async (req, res) => {
       citizenPhotoUrl = saveBase64Image(citizenPhoto);
     }
 
+    let resolvedSubmitterName = submitterName || 'Anonymous';
+    if (submitterUserId && mongoose.Types.ObjectId.isValid(submitterUserId)) {
+      const user = await User.findById(submitterUserId).select('firstName lastName').lean();
+      if (user) {
+        resolvedSubmitterName = `${user.firstName} ${user.lastName}`;
+      }
+    }
+
     const newGrievance = new Grievance({
       title: title.trim(),
       description: description.trim(),
@@ -162,7 +187,7 @@ router.post('/', async (req, res) => {
       aiPriority: aiPriority || 'Low',
       summary: summary || '',
       submitterUserId,
-      submitterName: submitterName || 'Anonymous',
+      submitterName: resolvedSubmitterName,
       location,
       citizenPhoto: citizenPhotoUrl ? { url: citizenPhotoUrl, uploadedAt: new Date() } : undefined
     });
@@ -182,13 +207,22 @@ router.post('/', async (req, res) => {
  */
 router.get('/:id', attachUser, async (req, res) => {
   try {
-    const grievance = await Grievance.findById(req.params.id);
+    const grievance = await Grievance.findById(req.params.id).lean();
     if (!grievance) {
       return res.status(404).json({ error: 'Grievance not found' });
     }
     if (!canDepartmentAccess(req.authUser, grievance)) {
       return res.status(403).json({ error: 'This grievance belongs to another department' });
     }
+
+    // Enrich with submitterName
+    if (grievance.submitterUserId && mongoose.Types.ObjectId.isValid(grievance.submitterUserId)) {
+      const user = await User.findById(grievance.submitterUserId).select('firstName lastName').lean();
+      if (user) {
+        grievance.submitterName = `${user.firstName} ${user.lastName}`;
+      }
+    }
+
     res.json(grievance);
   } catch (err) {
     console.error('Error fetching grievance:', err);
@@ -271,7 +305,15 @@ router.put('/:id', attachUser, async (req, res) => {
       return res.status(404).json({ error: 'Grievance not found' });
     }
 
-    res.json(grievance);
+    const grievanceObj = grievance.toObject ? grievance.toObject() : grievance;
+    if (grievanceObj.submitterUserId && mongoose.Types.ObjectId.isValid(grievanceObj.submitterUserId)) {
+      const user = await User.findById(grievanceObj.submitterUserId).select('firstName lastName').lean();
+      if (user) {
+        grievanceObj.submitterName = `${user.firstName} ${user.lastName}`;
+      }
+    }
+
+    res.json(grievanceObj);
   } catch (err) {
     console.error('Error updating grievance:', err);
     res.status(500).json({ error: 'Failed to update grievance' });
