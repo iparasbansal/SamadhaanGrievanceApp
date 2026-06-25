@@ -278,8 +278,9 @@ ${contextStr}
       parts: [{ text: `Thank you. I am ready to assist citizens as Samadhaan AI. How can I help you today?` }]
     });
 
-    // Now, push history
-    messages.forEach((msg) => {
+    // Now, push history (skipping the initial greeting to avoid consecutive 'model' role validation issues)
+    messages.forEach((msg, idx) => {
+      if (idx === 0 && msg.role === 'assistant') return;
       const role = msg.role === 'assistant' ? 'model' : 'user';
       contents.push({
         role: role,
