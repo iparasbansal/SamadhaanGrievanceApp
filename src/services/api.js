@@ -93,3 +93,10 @@ export const getImageUrl = (url) => {
   const serverBase = API_URL.replace(/\/api$/, "");
   return `${serverBase}${url}`;
 };
+
+export const askChatbot = (messages, userContext) => {
+  return request("/ai/chat", {
+    method: "POST",
+    body: JSON.stringify({ messages, userContext }),
+  });
+};

@@ -130,21 +130,21 @@ export default function MapPickerModal({ show, onClose, position, onSelect }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-md">
       <div className="glass-panel-strong w-full max-w-3xl overflow-hidden p-0 shadow-2xl">
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h3 className="font-space-grotesk text-lg font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+        <div className="flex items-center justify-between border-b border-emerald-100/80 px-6 py-4">
+          <h3 className="font-space-grotesk text-lg font-bold bg-gradient-to-r from-emerald-700 to-sky-700 bg-clip-text text-transparent">
             Choose Grievance Location
           </h3>
           <button
             onClick={onClose}
             type="button"
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition"
+            className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Search & Location Bar */}
-        <div className="bg-slate-900/40 p-4 border-b border-slate-800 flex flex-col md:flex-row gap-3">
+        <div className="bg-slate-50/50 p-4 border-b border-emerald-100/60 flex flex-col md:flex-row gap-3">
           <form onSubmit={handleSearch} className="relative flex-1">
             <input
               type="text"
@@ -156,10 +156,10 @@ export default function MapPickerModal({ show, onClose, position, onSelect }) {
             <button
               type="submit"
               disabled={searchLoading}
-              className="absolute right-3 top-2.5 text-slate-400 hover:text-emerald-400 transition"
+              className="absolute right-3 top-2.5 text-slate-400 hover:text-emerald-600 transition"
             >
               {searchLoading ? (
-                <Loader2 className="h-4.5 w-4.5 animate-spin text-emerald-400" />
+                <Loader2 className="h-4.5 w-4.5 animate-spin text-emerald-500" />
               ) : (
                 <Search className="h-4.5 w-4.5" />
               )}
@@ -170,12 +170,12 @@ export default function MapPickerModal({ show, onClose, position, onSelect }) {
             type="button"
             onClick={handleGeolocate}
             disabled={geolocateLoading}
-            className="flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-2.5 text-xs font-semibold text-emerald-400 transition hover:bg-slate-800 disabled:opacity-50"
+            className="flex items-center justify-center gap-2 rounded-xl border border-emerald-100 bg-white px-4 py-2.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-50"
           >
             {geolocateLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
+              <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
             ) : (
-              <Navigation className="h-4 w-4 text-emerald-400" />
+              <Navigation className="h-4 w-4 text-emerald-600" />
             )}
             Use GPS
           </button>
@@ -200,13 +200,13 @@ export default function MapPickerModal({ show, onClose, position, onSelect }) {
         </div>
 
         {/* Footer address display and controls */}
-        <div className="bg-slate-950/80 px-6 py-4 border-t border-slate-800">
+        <div className="bg-white px-6 py-4 border-t border-emerald-100/80">
           {selectedAddress && (
             <div className="mb-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 Selected address
               </span>
-              <p className="mt-1 text-sm font-medium text-slate-200 line-clamp-2">
+              <p className="mt-1 text-sm font-medium text-slate-800 line-clamp-2">
                 {selectedAddress}
               </p>
             </div>
@@ -216,7 +216,7 @@ export default function MapPickerModal({ show, onClose, position, onSelect }) {
             <button
               onClick={onClose}
               type="button"
-              className="rounded-xl border border-slate-800 bg-slate-900/60 px-5 py-2.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 transition"
+              className="rounded-xl border border-emerald-100 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
             >
               Cancel
             </button>

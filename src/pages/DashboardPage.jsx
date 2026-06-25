@@ -82,8 +82,8 @@ function ResolutionRadial({ percent }) {
         />
       </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold tabular-nums text-white">{Math.round(percent)}%</span>
-        <span className="text-[10px] uppercase tracking-widest text-slate-400">Resolved</span>
+        <span className="text-3xl font-bold tabular-nums text-slate-900">{Math.round(percent)}%</span>
+        <span className="text-[10px] uppercase tracking-widest text-slate-500">Resolved</span>
       </div>
     </div>
   );
@@ -424,23 +424,23 @@ function DashboardMap({
       </MapContainer>
 
       {/* Floating Legend */}
-      <div className="absolute bottom-4 left-4 z-[400] bg-slate-950/85 backdrop-blur-md p-3 rounded-xl border border-slate-800 shadow-lg text-[10px] font-medium text-slate-300 space-y-2 max-w-[160px] pointer-events-auto">
-        <span className="font-bold text-white uppercase tracking-wider block border-b border-slate-800 pb-1">Map Legend</span>
+      <div className="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-md p-3 rounded-xl border border-emerald-100/70 shadow-lg text-[10px] font-medium text-slate-800 space-y-2 max-w-[160px] pointer-events-auto">
+        <span className="font-bold text-slate-900 uppercase tracking-wider block border-b border-emerald-50 pb-1">Map Legend</span>
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 border border-slate-900 shadow-sm" />
+            <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 border border-white shadow-sm" />
             <span>Critical Priority</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-orange-500 border border-slate-900 shadow-sm" />
+            <span className="flex h-2.5 w-2.5 rounded-full bg-orange-500 border border-white shadow-sm" />
             <span>High Priority</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-blue-500 border border-slate-900 shadow-sm" />
+            <span className="flex h-2.5 w-2.5 rounded-full bg-blue-500 border border-white shadow-sm" />
             <span>Medium / Low</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 border border-slate-900 shadow-sm" />
+            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500 border border-white shadow-sm" />
             <span>Resolved Issue</span>
           </div>
         </div>
@@ -454,7 +454,7 @@ function DashboardMap({
           className={`flex items-center justify-center px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-wider shadow-md transition ${
             mapFilters.showResolved
               ? 'bg-emerald-600 border-emerald-500 text-white hover:bg-emerald-700'
-              : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800'
+              : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
           }`}
         >
           {mapFilters.showResolved ? 'Hide Resolved' : 'Show Resolved'}
@@ -466,7 +466,7 @@ function DashboardMap({
           className={`flex items-center justify-center px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-wider shadow-md transition ${
             mapFilters.showCriticalOnly
               ? 'bg-red-600 border-red-500 text-white animate-pulse hover:bg-red-700'
-              : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800'
+              : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
           }`}
         >
           {mapFilters.showCriticalOnly ? 'Show All Priorities' : 'Critical Only'}
@@ -733,7 +733,7 @@ function DashboardPage() {
 
   return (
     <motion.div
-      className="relative min-h-[60vh] overflow-hidden text-slate-200"
+      className="relative min-h-[60vh] overflow-hidden text-slate-800"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -824,11 +824,11 @@ function DashboardPage() {
                         <span className="text-xs font-semibold uppercase tracking-widest">Ingest volume</span>
                       </div>
                       <div className="flex items-baseline gap-2 mt-1.5">
-                        <span className="font-space-grotesk text-3xl font-extrabold text-white">{stats.total}</span>
-                        <span className="text-xs text-slate-400">complaints · trailing 7 days</span>
+                        <span className="font-space-grotesk text-3xl font-extrabold text-slate-900">{stats.total}</span>
+                        <span className="text-xs text-slate-500">complaints · trailing 7 days</span>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50/70 px-2.5 py-1 rounded-full border border-emerald-100/50 uppercase tracking-wider">
                       Live tracking
                     </span>
                   </div>
@@ -856,14 +856,14 @@ function DashboardPage() {
                     {deptResolvePreview.map((d) => (
                       <li
                         key={d.name}
-                        className="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2 text-slate-300 last:border-0"
+                        className="flex items-center justify-between gap-2 border-b border-emerald-100 pb-2 text-slate-600 last:border-0"
                       >
                         <span className="truncate">{d.name}</span>
-                        <span className="font-mono text-emerald-400">{d.rate}%</span>
+                        <span className="font-mono text-emerald-600">{d.rate}%</span>
                       </li>
                     ))}
                     {deptResolvePreview.length === 0 && (
-                      <li className="text-slate-400">No department data yet</li>
+                      <li className="text-slate-500">No department data yet</li>
                     )}
                   </ul>
                 </div>
@@ -872,14 +872,14 @@ function DashboardPage() {
 
             <div className="flex flex-wrap items-center gap-4 w-full">
               {/* Layout Toggle */}
-              <div className="flex items-center gap-1 rounded-full border border-slate-800 bg-slate-950/80 p-1 shadow-sm">
+              <div className="flex items-center gap-1 rounded-full border border-emerald-100 bg-white p-1 shadow-sm">
                 <button
                   type="button"
                   onClick={() => setViewMode('list')}
                   className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
                     viewMode === 'list'
                       ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-emerald-400'
+                      : 'text-slate-500 hover:text-emerald-700'
                   }`}
                 >
                   <LayoutGrid className="h-3.5 w-3.5" />
@@ -891,7 +891,7 @@ function DashboardPage() {
                   className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider transition ${
                     viewMode === 'map'
                       ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-emerald-400'
+                      : 'text-slate-500 hover:text-emerald-700'
                   }`}
                 >
                   <MapIcon className="h-3.5 w-3.5" />
@@ -916,8 +916,8 @@ function DashboardPage() {
                       whileTap={{ scale: 0.97 }}
                       className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition ${
                         sortBy === btn.id
-                          ? 'border-emerald-500/50 bg-emerald-500/20 text-emerald-300 shadow-[0_8px_24px_rgba(16,185,129,0.25)]'
-                          : 'border-slate-800 bg-slate-900/60 text-slate-300 hover:border-slate-700 hover:text-white'
+                          ? 'border-emerald-300 bg-emerald-100 text-emerald-800 shadow-[0_8px_24px_rgba(16,185,129,0.18)]'
+                          : 'border-emerald-100 bg-white text-slate-600 hover:border-emerald-200 hover:text-emerald-700'
                       }`}
                     >
                       <Icon className="h-3.5 w-3.5" />
@@ -1014,10 +1014,10 @@ function DashboardPage() {
                   >
                     <div className="absolute left-0 top-0 h-1 w-full bg-gradient-primary opacity-70" />
                     <Icon className="mb-3 h-5 w-5 text-emerald-600" />
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
                       {stat.label}
                     </p>
-                    <p className="font-space-grotesk mt-1 text-3xl font-extrabold text-white">{stat.value}</p>
+                    <p className="font-space-grotesk mt-1 text-3xl font-extrabold text-slate-900">{stat.value}</p>
                   </motion.div>
                 );
               })}
@@ -1033,9 +1033,9 @@ function DashboardPage() {
                 className="glass-panel-strong p-6 relative overflow-hidden"
               >
                 <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-emerald-500 to-teal-500 opacity-80" />
-                <div className="flex items-center gap-2 border-b border-slate-800 pb-3 mb-5">
-                  <BarChart3 className="h-5 w-5 text-emerald-500" />
-                  <h3 className="font-space-grotesk text-base font-bold text-white">
+                <div className="flex items-center gap-2 border-b border-emerald-100 pb-3 mb-5">
+                  <BarChart3 className="h-5 w-5 text-emerald-600" />
+                  <h3 className="font-space-grotesk text-base font-bold text-slate-900">
                     Department Category Analytics
                   </h3>
                 </div>
@@ -1054,14 +1054,14 @@ function DashboardPage() {
                     ];
                     const grad = gradients[i % gradients.length];
                     return (
-                      <div key={cat} className="space-y-1.5 bg-slate-900/40 hover:bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 transition duration-200">
+                      <div key={cat} className="space-y-1.5 bg-slate-50/50 hover:bg-slate-50/80 p-3 rounded-xl border border-slate-100 transition duration-200">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-slate-200">{cat}</span>
-                          <span className="font-mono text-slate-400 font-bold">
+                          <span className="font-bold text-slate-700">{cat}</span>
+                          <span className="font-mono text-slate-600 font-bold">
                             {count} {stats.total ? `(${Math.round(percentage)}%)` : ''}
                           </span>
                         </div>
-                        <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                        <div className="w-full h-2 bg-slate-100/80 rounded-full overflow-hidden border border-slate-200/30">
                           <motion.div
                             className={`h-full bg-gradient-to-r ${grad}`}
                             initial={{ width: 0 }}
@@ -1085,15 +1085,15 @@ function DashboardPage() {
                 <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-teal-500 to-sky-500 opacity-80" />
                 
                 {/* Header with Tabs */}
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-5 gap-4">
-                  <div className="flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-950/80 p-1">
+                <div className="flex items-center justify-between border-b border-emerald-100 pb-3 mb-5 gap-4">
+                  <div className="flex items-center gap-1.5 rounded-full border border-emerald-50 bg-slate-50 p-1">
                     <button
                       type="button"
                       onClick={() => setLeaderboardTab('departments')}
                       className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
                         leaderboardTab === 'departments'
                           ? 'bg-emerald-600 text-white shadow-sm'
-                          : 'text-slate-400 hover:text-emerald-400'
+                          : 'text-slate-500 hover:text-emerald-700'
                       }`}
                     >
                       Departments
@@ -1104,13 +1104,13 @@ function DashboardPage() {
                       className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition ${
                         leaderboardTab === 'citizens'
                           ? 'bg-emerald-600 text-white shadow-sm'
-                          : 'text-slate-400 hover:text-emerald-400'
+                          : 'text-slate-500 hover:text-emerald-700'
                       }`}
                     >
                       Citizen Heroes
                     </button>
                   </div>
-                  <h3 className="font-space-grotesk text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <h3 className="font-space-grotesk text-xs font-bold uppercase tracking-wider text-slate-500">
                     Leaderboard
                   </h3>
                 </div>
@@ -1125,27 +1125,27 @@ function DashboardPage() {
                           key={dept.name}
                           className={`flex items-center justify-between p-3 rounded-xl border transition duration-200 ${
                             index === 0
-                              ? 'bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10'
+                              ? 'bg-amber-500/5 border-amber-200/50 hover:bg-amber-500/10'
                               : index === 1
-                              ? 'bg-slate-800/20 border-slate-700/30 hover:bg-slate-800/30'
+                              ? 'bg-slate-300/10 border-slate-200/50 hover:bg-slate-300/15'
                               : index === 2
-                              ? 'bg-amber-700/5 border-amber-700/20 hover:bg-amber-700/10'
-                              : 'bg-slate-900/40 border-slate-800/85 hover:bg-slate-900/60'
+                              ? 'bg-amber-700/5 border-amber-600/30 hover:bg-amber-700/10'
+                              : 'bg-slate-50/50 border-slate-100 hover:bg-slate-50/80'
                           }`}
                         >
                           <div className="flex items-center gap-3">
                             <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                              isMedal ? 'bg-slate-950 border border-slate-700/60 shadow-md text-white' : 'text-slate-400'
+                              isMedal ? 'bg-white shadow-sm border border-slate-100' : 'text-slate-400'
                             }`}>
                               {medal}
                             </span>
-                            <span className="text-xs font-bold text-slate-200">{dept.name}</span>
+                            <span className="text-xs font-bold text-slate-800">{dept.name}</span>
                           </div>
                           <div className="text-right">
-                            <span className="font-mono text-xs font-bold text-emerald-400 block">
+                            <span className="font-mono text-xs font-bold text-emerald-600 block">
                               {dept.rate}% resolved
                             </span>
-                            <span className="text-[10px] text-slate-400">
+                            <span className="text-[10px] text-slate-500">
                               {dept.resolved} of {dept.total} cases
                             </span>
                           </div>
@@ -1161,27 +1161,27 @@ function DashboardPage() {
                           key={citizen.id}
                           className={`flex items-center justify-between p-3 rounded-xl border transition duration-200 ${
                             index === 0
-                              ? 'bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10'
+                              ? 'bg-amber-500/5 border-amber-200/50 hover:bg-amber-500/10'
                               : index === 1
-                              ? 'bg-slate-800/20 border-slate-700/30 hover:bg-slate-800/30'
+                              ? 'bg-slate-300/10 border-slate-200/50 hover:bg-slate-300/15'
                               : index === 2
-                              ? 'bg-amber-700/5 border-amber-700/20 hover:bg-amber-700/10'
-                              : 'bg-slate-900/40 border-slate-800/85 hover:bg-slate-900/60'
+                              ? 'bg-amber-700/5 border-amber-600/30 hover:bg-amber-700/10'
+                              : 'bg-slate-50/50 border-slate-100 hover:bg-slate-50/80'
                           }`}
                         >
                           <div className="flex items-center gap-3">
                             <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                              isMedal ? 'bg-slate-950 border border-slate-700/60 shadow-md text-white' : 'text-slate-400'
+                              isMedal ? 'bg-white shadow-sm border border-slate-100' : 'text-slate-400'
                             }`}>
                               {medal}
                             </span>
-                            <span className="text-xs font-bold text-slate-200">{citizen.name}</span>
+                            <span className="text-xs font-bold text-slate-800">{citizen.name}</span>
                           </div>
                           <div className="text-right">
-                            <span className="font-mono text-xs font-bold text-emerald-400 block">
+                            <span className="font-mono text-xs font-bold text-emerald-600 block">
                               {citizen.score} pts
                             </span>
-                            <span className="text-[10px] text-slate-400">
+                            <span className="text-[10px] text-slate-500">
                               {citizen.total} filed · {citizen.resolved} resolved
                             </span>
                           </div>
@@ -1240,7 +1240,7 @@ function DashboardPage() {
                 </div>
 
                 {/* Right map panel */}
-                <div className="w-full lg:w-[62%] h-[400px] lg:h-full rounded-2xl overflow-hidden border border-slate-800 shadow-md relative bg-slate-950/80 flex-1">
+                <div className="w-full lg:w-[62%] h-[400px] lg:h-full rounded-2xl overflow-hidden border border-emerald-100/60 shadow-sm relative bg-white flex-1">
                   <DashboardMap
                     grievances={filteredGrievances}
                     userLocation={userLocation}
@@ -1295,65 +1295,65 @@ function DashboardPage() {
               initial={{ scale: 0.94, y: 16 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.94, y: 16 }}
-              className="glass-panel-strong max-h-[90vh] w-full max-w-lg overflow-y-auto p-6 text-slate-200"
+              className="glass-panel-strong max-h-[90vh] w-full max-w-lg overflow-y-auto p-6 text-slate-800"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                <h2 className="font-space-grotesk text-xl font-bold text-white">{inspectedGrievance.title}</h2>
+              <div className="flex items-center justify-between border-b border-emerald-100 pb-3 mb-4">
+                <h2 className="font-space-grotesk text-xl font-bold text-slate-900">{inspectedGrievance.title}</h2>
                 <button
                   type="button"
                   onClick={() => setInspectedGrievance(null)}
-                  className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition"
+                  className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
               
-              <p className="text-sm text-slate-300 leading-relaxed mb-4">{inspectedGrievance.description}</p>
+              <p className="text-sm text-slate-700 leading-relaxed mb-4">{inspectedGrievance.description}</p>
 
               <div className="grid grid-cols-2 gap-3 text-xs mb-4">
                 <div>
-                  <span className="text-slate-400 font-semibold block">Department</span>
-                  <p className="text-slate-200 font-medium">{inspectedGrievance.category}</p>
+                  <span className="text-slate-500 font-semibold block">Department</span>
+                  <p className="text-slate-700 font-medium">{inspectedGrievance.category}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 font-semibold block">Priority</span>
-                  <p className="text-slate-200 font-medium">{inspectedGrievance.aiPriority}</p>
+                  <span className="text-slate-500 font-semibold block">Priority</span>
+                  <p className="text-slate-700 font-medium">{inspectedGrievance.aiPriority}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 font-semibold block">Status</span>
-                  <p className="text-slate-200 font-medium">{inspectedGrievance.status}</p>
+                  <span className="text-slate-500 font-semibold block">Status</span>
+                  <p className="text-slate-700 font-medium">{inspectedGrievance.status}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 font-semibold block">Signals (Upvotes)</span>
-                  <p className="text-slate-200 font-medium">{inspectedGrievance.upvotes || 0}</p>
+                  <span className="text-slate-500 font-semibold block">Signals (Upvotes)</span>
+                  <p className="text-slate-700 font-medium">{inspectedGrievance.upvotes || 0}</p>
                 </div>
               </div>
 
               {inspectedGrievance.summary && (
-                <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-3.5 mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block mb-1">AI summary</span>
-                  <p className="text-xs text-slate-300 leading-relaxed">{inspectedGrievance.summary}</p>
+                <div className="rounded-xl border border-emerald-100 bg-emerald-50/30 p-3.5 mb-4">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 block mb-1">AI summary</span>
+                  <p className="text-xs text-slate-600 leading-relaxed">{inspectedGrievance.summary}</p>
                 </div>
               )}
 
               {inspectedGrievance.location?.address && (
                 <div className="mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Location</span>
-                  <p className="text-xs text-slate-300">{inspectedGrievance.location.address}</p>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">Location</span>
+                  <p className="text-xs text-slate-600">{inspectedGrievance.location.address}</p>
                 </div>
               )}
 
               <LiveTrace status={inspectedGrievance.status} />
 
               {inspectedGrievance.citizenPhoto?.url && (
-                <div className="mt-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80">
+                <div className="mt-4 overflow-hidden rounded-xl border border-emerald-100 bg-white">
                   <img
                     src={getImageUrl(inspectedGrievance.citizenPhoto.url)}
                     alt="Grievance proof"
                     className="max-h-64 w-full object-cover"
                   />
-                  <p className="px-3 py-2 text-[10px] text-slate-400">
+                  <p className="px-3 py-2 text-[10px] text-slate-500">
                     Citizen photo proof
                     {inspectedGrievance.citizenPhoto.uploadedAt
                       ? ` · ${new Date(inspectedGrievance.citizenPhoto.uploadedAt).toLocaleString('en-IN')}`
@@ -1363,13 +1363,13 @@ function DashboardPage() {
               )}
 
               {inspectedGrievance.resolutionPhoto?.url && (
-                <div className="mt-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80">
+                <div className="mt-4 overflow-hidden rounded-xl border border-emerald-100 bg-white">
                   <img
                     src={getImageUrl(inspectedGrievance.resolutionPhoto.url)}
                     alt="Solved proof"
                     className="max-h-64 w-full object-cover"
                   />
-                  <p className="px-3 py-2 text-[10px] text-slate-400">
+                  <p className="px-3 py-2 text-[10px] text-slate-500">
                     Solved photo proof
                     {inspectedGrievance.resolutionPhoto.uploadedAt
                       ? ` · ${new Date(inspectedGrievance.resolutionPhoto.uploadedAt).toLocaleString('en-IN')}`

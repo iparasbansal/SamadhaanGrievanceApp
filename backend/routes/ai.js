@@ -218,4 +218,92 @@ Return valid JSON ONLY like:
   }
 });
 
+/**
+ * @route   POST /api/ai/chat
+ * @desc    Chat with Gemini AI (multi-turn conversation with grievance context)
+ * @access  Public
+ */
+router.post('/chat', async (req, res) => {
+  try {
+    const { messages, userContext } = req.body;
+
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: 'Messages array is required' });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.json({
+        reply: "Hello! The AI service is currently unavailable as the API key is not configured. How else can I assist you today?"
+      });
+    }
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+    // Construct user contexts
+    let contextStr = '';
+    if (userContext && Array.isArray(userContext) && userContext.length > 0) {
+      contextStr = `Here are the citizen's currently filed municipal complaints:\n` +
+        userContext.map((g, idx) => `${idx + 1}. Title: "${g.title}", Status: "${g.status}", Category: "${g.category}", Priority: "${g.aiPriority || 'Unknown'}", Date filed: ${g.createdAt ? new Date(g.createdAt).toLocaleDateString() : 'recent'}`).join('\n') +
+        `\nRefer to this list to answer status questions.`;
+    } else {
+      contextStr = `The citizen has not filed any complaints yet.`;
+    }
+
+    const systemPrompt = `
+You are **Samadhaan AI**, the official virtual assistant for the Samadhaan Grievance Portal.
+Your purpose is to help citizens file complaints, track the status of existing complaints, and answer questions about municipal services (like roads, electricity, waste, public safety, water, emergency).
+
+Rules:
+1. Be polite, clear, and concise. Emojis (⚡, 📍, 🏢, 🥇, 🛠️) are encouraged.
+2. If the user asks about the status of their complaints, use the following real-time context to answer:
+---
+${contextStr}
+---
+3. If they describe a new issue, summarize it and guide them to file it using the "New case" button in the navigation bar.
+4. Keep formatting clean with simple bullet points. Use standard Markdown.
+`;
+
+    // Map frontend messages history to Gemini's expected contents structure
+    // Gemini roles: "user" | "model"
+    const contents = [];
+
+    // First, feed system instructions
+    contents.push({
+      role: 'user',
+      parts: [{ text: `${systemPrompt}\n\nUnderstood. I will act as Samadhaan AI.` }]
+    });
+    contents.push({
+      role: 'model',
+      parts: [{ text: `Thank you. I am ready to assist citizens as Samadhaan AI. How can I help you today?` }]
+    });
+
+    // Now, push history
+    messages.forEach((msg) => {
+      const role = msg.role === 'assistant' ? 'model' : 'user';
+      contents.push({
+        role: role,
+        parts: [{ text: msg.content }]
+      });
+    });
+
+    const payload = {
+      contents
+    };
+
+    const data = await fetchWithBackoff(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const rawReply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "I'm sorry, I couldn't process that response. Please try again.";
+    
+    return res.json({ reply: rawReply });
+  } catch (error) {
+    console.error('❌ AI Chat failed:', error.message);
+    return res.status(500).json({ error: 'Chat service failed to respond. Please try again.' });
+  }
+});
+
 module.exports = router;

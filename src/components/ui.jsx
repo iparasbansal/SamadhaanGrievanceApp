@@ -7,10 +7,10 @@ export const Button = React.forwardRef(
     const variants = {
       default: 'bg-gradient-primary text-white hover:opacity-90',
       destructive: 'bg-red-600 text-white hover:bg-red-700',
-      outline: 'border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-slate-200',
+      outline: 'border border-emerald-100 bg-white hover:bg-emerald-50 text-gray-800',
       secondary:
-        'border border-slate-800 bg-slate-900/40 text-slate-300 hover:bg-slate-800 hover:text-white',
-      upvoted: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)]',
+        'border border-emerald-100 bg-emerald-50 text-emerald-700 hover:bg-emerald-100',
+      upvoted: 'bg-emerald-100 text-emerald-700 border border-emerald-300',
     };
     const sizes = {
       default: 'h-10 px-4 py-2',

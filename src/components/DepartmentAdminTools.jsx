@@ -99,14 +99,14 @@ function DepartmentAdminTools({ grievance, isAuthority, showToast, onGrievanceUp
                 <Settings className="h-4 w-4" /> Admin Tools
             </div>
 
-            <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-xs font-semibold text-slate-300 transition hover:bg-slate-800 hover:text-white">
+            <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100">
                 <ImageUp className="h-4 w-4" />
                 {selectedFile ? selectedFile.name : resolutionPhoto?.url ? "Replace solved photo" : "Upload solved photo"}
                 <input type="file" accept="image/*" onChange={handlePhotoSelect} className="sr-only" />
             </label>
 
             {(previewUrl || resolutionPhoto?.url) && (
-                <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-950/80">
+                <div className="overflow-hidden rounded-lg border border-emerald-100 bg-white">
                     <img
                         src={previewUrl || getImageUrl(resolutionPhoto.url)}
                         alt="Solved proof"

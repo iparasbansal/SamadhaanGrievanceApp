@@ -147,23 +147,23 @@ function ProfilePage() {
             {firstName?.slice(0, 1) || user.email.slice(0, 1).toUpperCase()}
           </div>
           <div>
-            <h2 className="font-space-grotesk text-2xl font-extrabold text-white">
+            <h2 className="font-space-grotesk text-2xl font-extrabold text-slate-900">
               {firstName || "Citizen"}
             </h2>
-            <p className="text-sm font-semibold uppercase tracking-wider text-emerald-400 mt-1 flex items-center gap-1.5 justify-center md:justify-start">
-              <Sparkles className="h-4 w-4 text-emerald-400 animate-pulse" />
+            <p className="text-sm font-semibold uppercase tracking-wider text-emerald-700 mt-1 flex items-center gap-1.5 justify-center md:justify-start">
+              <Sparkles className="h-4 w-4 text-emerald-600 animate-pulse" />
               {getRankName(level)}
             </p>
           </div>
         </div>
 
         {/* Level and XP Meter */}
-        <div className="w-full md:w-[320px] glass-panel p-4 rounded-2xl shadow-sm relative">
+        <div className="w-full md:w-[320px] bg-white/70 border border-emerald-100 p-4 rounded-2xl shadow-sm relative">
           <div className="flex justify-between items-center mb-2 text-xs">
-            <span className="font-bold text-slate-300 uppercase tracking-wide">Level {level}</span>
-            <span className="font-mono font-bold text-slate-450">{currentXP} / {xpPerLevel} XP</span>
+            <span className="font-bold text-slate-700 uppercase tracking-wide">Level {level}</span>
+            <span className="font-mono font-bold text-slate-500">{currentXP} / {xpPerLevel} XP</span>
           </div>
-          <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+          <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
             <motion.div
               className="h-full bg-gradient-primary"
               initial={{ width: 0 }}
@@ -267,7 +267,7 @@ function ProfilePage() {
           <h3 className="font-space-grotesk text-lg font-bold text-slate-900">
             Civic Achievements
           </h3>
-          <span className="ml-auto text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+          <span className="ml-auto text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 rounded-full">
             {badges.filter((b) => b.unlocked).length} / {badges.length} Unlocked
           </span>
         </div>
@@ -282,27 +282,27 @@ function ProfilePage() {
                 className={`relative rounded-2xl border p-4 flex gap-3 transition-all duration-300 ${
                   badge.unlocked
                     ? `${badge.color} shadow-sm cursor-pointer`
-                    : "border-slate-800 bg-slate-950/40 opacity-60 grayscale"
+                    : "border-slate-100 bg-slate-50/50 opacity-60 grayscale"
                 }`}
               >
                 {/* Lock/Unlock status overlay */}
                 <div className="absolute right-3 top-3">
                   {badge.unlocked ? (
-                    <Unlock className="h-3.5 w-3.5 opacity-45 text-emerald-400" />
+                    <Unlock className="h-3.5 w-3.5 opacity-40 text-emerald-600" />
                   ) : (
-                    <Lock className="h-3.5 w-3.5 opacity-30 text-slate-450" />
+                    <Lock className="h-3.5 w-3.5 opacity-30 text-slate-500" />
                   )}
                 </div>
 
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-800">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100">
                   <Icon className="h-5 w-5" />
                 </div>
 
                 <div className="space-y-1 pr-4">
-                  <h4 className="text-xs font-extrabold uppercase tracking-wide text-white">
+                  <h4 className="text-xs font-extrabold uppercase tracking-wide text-slate-900">
                     {badge.name}
                   </h4>
-                  <p className="text-[11px] leading-relaxed text-slate-300">
+                  <p className="text-[11px] leading-relaxed text-slate-600">
                     {badge.desc}
                   </p>
                 </div>
