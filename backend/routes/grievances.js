@@ -144,6 +144,36 @@ router.get('/', attachUser, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch grievances' });
   }
 });
+router.get('/test-debug', async (req, res) => {
+  const logs = [];
+  logs.push('Start');
+  try {
+    logs.push('Creating new Grievance instance');
+    const newGrievance = new Grievance({
+      title: 'Test Title Debug',
+      description: 'Test description debug that is long enough.',
+      category: 'Other',
+      aiPriority: 'Low',
+      summary: 'Test summary',
+      submitterUserId: '6a3cd505bb205dfb9b97b11f',
+      submitterName: 'Test Debugger',
+      location: {
+        address: 'Test Spot',
+        latitude: 30.24,
+        longitude: 75.84
+      }
+    });
+    logs.push('Grievance instance created');
+    
+    logs.push('Saving Grievance');
+    const saved = await newGrievance.save();
+    logs.push('Grievance saved successfully');
+    return res.json({ success: true, logs, saved });
+  } catch (err) {
+    logs.push(`Error caught: ${err.message}`);
+    return res.json({ success: false, logs, error: err.stack });
+  }
+});
 
 /**
  * @route   POST /api/grievances
