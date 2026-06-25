@@ -173,7 +173,7 @@ export default function ChatbotWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.94 }}
             transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-            className="fixed bottom-22 right-6 z-[9999] w-[340px] sm:w-96 h-[520px] flex flex-col rounded-2xl glass-panel-strong overflow-hidden shadow-[0_12px_45px_rgba(0,0,0,0.08)] border border-white/90"
+            className="fixed bottom-24 right-6 z-[9999] w-[340px] sm:w-96 h-[520px] flex flex-col rounded-2xl glass-panel-strong overflow-hidden shadow-[0_12px_45px_rgba(0,0,0,0.08)] border border-white/90"
           >
             {/* Header */}
             <div className="bg-gradient-primary px-4 py-3 flex items-center justify-between text-white shadow-sm shrink-0">
