@@ -185,17 +185,17 @@ function AuthPage() {
                 onClick={skipLogin}
                 whileTap={{ scale: 0.97 }}
                 whileHover={{ scale: 1.03 }}
-                className="w-full rounded-lg border border-emerald-100 bg-white py-3 font-semibold text-slate-800 shadow-md transition-all duration-300 hover:bg-emerald-50"
+                className="w-full rounded-lg border border-slate-800 bg-slate-900/60 py-3 font-semibold text-slate-200 shadow-md transition-all duration-300 hover:bg-slate-800 hover:text-white"
             >
                 Skip
             </motion.button>
 
           {/* Toggle Mode */}
-          <p className="mt-3 text-center text-sm text-slate-500">
+          <p className="mt-3 text-center text-sm text-slate-400">
             {isLoginMode ? "New here?" : "Already have an account?"}{" "}
             <span
               onClick={() => setIsLoginMode(!isLoginMode)}
-              className="cursor-pointer text-emerald-600 hover:text-emerald-500"
+              className="cursor-pointer text-emerald-400 hover:text-emerald-300 font-semibold"
             >
               {isLoginMode ? "Create one" : "Sign in"}
             </span>

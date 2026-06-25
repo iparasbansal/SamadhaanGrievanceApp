@@ -89,8 +89,8 @@ function Layout({ children, onNavigate, currentPage }) {
     return (
       <div className="glass-panel flex max-w-[min(100%,20rem)] items-center gap-3 rounded-full px-4 py-1.5">
         <Sparkles className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
-        <span className="text-xs font-medium uppercase tracking-wider text-emerald-700">Citizen</span>
-        <span className="truncate font-semibold text-slate-800" title={displayTitle}>
+        <span className="text-xs font-medium uppercase tracking-wider text-emerald-400">Citizen</span>
+        <span className="truncate font-semibold text-slate-200" title={displayTitle}>
           {displayName}
         </span>
         {isSuperAdmin && (
@@ -108,19 +108,19 @@ function Layout({ children, onNavigate, currentPage }) {
   };
 
   return (
-    <div className="command-shell text-slate-800">
+    <div className="command-shell text-slate-200">
       <div className="relative z-10 flex min-h-screen">
         <motion.aside
           initial={false}
           animate={{ width: sidebarCollapsed ? 80 : 260 }}
           transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-          className="sticky top-0 hidden h-screen shrink-0 flex-col border-r border-emerald-100/80 bg-white/88 py-4 backdrop-blur-2xl md:flex"
+          className="sticky top-0 hidden h-screen shrink-0 flex-col border-r border-slate-800 bg-slate-950/80 py-4 backdrop-blur-2xl md:flex shadow-xl"
         >
           <div className="flex items-center justify-between gap-2 px-3 pb-6">
             {!sidebarCollapsed && (
               <div className="flex items-center gap-2 overflow-hidden pl-1">
                 <Leaf className="h-8 w-8 shrink-0 text-emerald-500 drop-shadow-[0_8px_16px_rgba(16,185,129,0.25)]" />
-                <span className="font-space-grotesk truncate bg-gradient-to-r from-emerald-600 to-sky-600 bg-clip-text text-lg font-bold tracking-tight text-transparent">
+                <span className="font-space-grotesk truncate bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-lg font-bold tracking-tight text-transparent">
                   Samadhaan
                 </span>
               </div>
@@ -133,7 +133,7 @@ function Layout({ children, onNavigate, currentPage }) {
           <button
             type="button"
             onClick={() => setSidebarCollapsed((c) => !c)}
-            className="mx-3 mb-4 flex items-center justify-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50/70 py-2 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100"
+            className="mx-3 mb-4 flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-900/60 py-2 text-xs font-medium text-emerald-400 transition hover:bg-slate-800 hover:text-emerald-300"
             title={sidebarCollapsed ? 'Expand' : 'Collapse'}
           >
             {sidebarCollapsed ? (
@@ -159,8 +159,8 @@ function Layout({ children, onNavigate, currentPage }) {
                     sidebarCollapsed ? 'justify-center' : ''
                   } ${
                     currentPage === item.id
-                      ? 'bg-emerald-50 text-emerald-700 font-bold border-l-2 border-emerald-500 shadow-sm'
-                      : 'text-slate-600 hover:bg-emerald-50/50 hover:text-emerald-700'
+                      ? 'bg-emerald-500/10 text-emerald-400 font-bold border-l-2 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+                      : 'text-slate-400 hover:bg-slate-900/60 hover:text-emerald-400'
                   }`}
                   title={item.label}
                 >
@@ -173,11 +173,11 @@ function Layout({ children, onNavigate, currentPage }) {
             })}
           </nav>
 
-          <div className="mt-auto border-t border-emerald-100 px-3 pt-4">
+          <div className="mt-auto border-t border-slate-800 px-3 pt-4">
             <button
               type="button"
               onClick={() => setCommandOpen(true)}
-              className={`flex w-full items-center gap-2 rounded-xl border border-emerald-100 bg-white px-3 py-2 text-xs text-slate-500 transition hover:border-emerald-200 hover:text-emerald-700 ${
+              className={`flex w-full items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2 text-xs text-slate-400 transition hover:border-slate-700 hover:text-emerald-400 ${
                 sidebarCollapsed ? 'justify-center' : ''
               }`}
             >
@@ -185,7 +185,7 @@ function Layout({ children, onNavigate, currentPage }) {
               {!sidebarCollapsed && (
                 <>
                   <span className="flex-1 text-left">Command</span>
-                  <kbd className="rounded border border-emerald-100 bg-emerald-50 px-1.5 py-0.5 font-mono text-[10px]">
+                  <kbd className="rounded border border-slate-800 bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">
                     ⌘K
                   </kbd>
                 </>
@@ -202,7 +202,7 @@ function Layout({ children, onNavigate, currentPage }) {
                 onClick={() => onNavigate('dashboard')}
               >
                 <Leaf className="h-7 w-7 text-emerald-500" />
-                <span className="font-space-grotesk bg-gradient-to-r from-emerald-600 to-sky-600 bg-clip-text text-xl font-bold text-transparent">
+                <span className="font-space-grotesk bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-xl font-bold text-transparent">
                   Samadhaan
                 </span>
               </div>
@@ -210,11 +210,11 @@ function Layout({ children, onNavigate, currentPage }) {
               <button
                 type="button"
                 onClick={() => setCommandOpen(true)}
-                className="glass-panel group flex flex-1 items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-slate-500 transition hover:border-emerald-200 hover:text-emerald-700 md:max-w-md"
+                className="glass-panel group flex flex-1 items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm text-slate-400 transition hover:border-emerald-500/50 hover:text-white md:max-w-md"
               >
                 <Search className="h-4 w-4 text-emerald-500" />
                 <span className="flex-1 truncate">Search or jump…</span>
-                <kbd className="hidden rounded border border-emerald-100 bg-emerald-50 px-2 py-0.5 font-mono text-[10px] text-slate-500 sm:inline-block">
+                <kbd className="hidden rounded border border-slate-800 bg-slate-900 px-2 py-0.5 font-mono text-[10px] text-slate-400 sm:inline-block">
                   ⌘K
                 </kbd>
               </button>
@@ -230,7 +230,7 @@ function Layout({ children, onNavigate, currentPage }) {
                   New case
                 </Button>
                 <Menu as="div" className="relative inline-block text-left">
-                  <Menu.Button className="glass-panel flex items-center gap-2 rounded-xl px-4 py-2 text-sm text-slate-700 transition hover:border-emerald-200">
+                  <Menu.Button className="glass-panel flex items-center gap-2 rounded-xl px-4 py-2 text-sm text-slate-300 transition hover:border-emerald-500/50 hover:text-white">
                     <User className="h-4 w-4 text-emerald-500" />
                     Menu
                     <ChevronDown className="h-4 w-4 opacity-60" />
@@ -254,7 +254,7 @@ function Layout({ children, onNavigate, currentPage }) {
                                 <button
                                   type="button"
                                   onClick={() => onNavigate('profile')}
-                                  className={`${active ? 'bg-emerald-50' : ''} w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700`}
+                                  className={`${active ? 'bg-slate-800/80 text-white' : 'text-slate-300'} w-full rounded-lg px-3 py-2 text-left text-sm transition`}
                                 >
                                   Profile
                                 </button>
@@ -265,7 +265,7 @@ function Layout({ children, onNavigate, currentPage }) {
                                 <button
                                   type="button"
                                   onClick={() => onNavigate('mycomplaints')}
-                                  className={`${active ? 'bg-emerald-50' : ''} w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700`}
+                                  className={`${active ? 'bg-slate-800/80 text-white' : 'text-slate-300'} w-full rounded-lg px-3 py-2 text-left text-sm transition`}
                                 >
                                   My complaints
                                 </button>
@@ -276,7 +276,7 @@ function Layout({ children, onNavigate, currentPage }) {
                                 <button
                                   type="button"
                                   onClick={handleLogout}
-                                  className={`${active ? 'bg-rose-50' : ''} w-full rounded-lg px-3 py-2 text-left text-sm text-rose-600`}
+                                  className={`${active ? 'bg-red-950/40 text-red-400' : 'text-rose-500'} w-full rounded-lg px-3 py-2 text-left text-sm transition`}
                                 >
                                   Sign out
                                 </button>

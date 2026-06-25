@@ -15,8 +15,8 @@ export function LiveTrace({ status }) {
     PIPELINE.findIndex((s) => s === status)
   );
   return (
-    <div className="relative mt-3 border-t border-emerald-100 pt-3">
-      <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-emerald-700">Progress trace</p>
+    <div className="relative mt-3 border-t border-slate-800 pt-3">
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-emerald-400">Progress trace</p>
       <div className="flex items-center gap-1">
         {PIPELINE.map((step, i) => {
           const done = i <= activeIndex;
@@ -27,22 +27,22 @@ export function LiveTrace({ status }) {
                 <motion.div
                   className={`flex h-6 w-6 items-center justify-center rounded-full border text-[10px] ${
                     done
-                      ? 'border-emerald-300 bg-emerald-100 text-emerald-700'
-                      : 'border-slate-200 bg-white text-slate-400'
+                      ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-400'
+                      : 'border-slate-800 bg-slate-950 text-slate-500'
                   }`}
                   animate={current ? { scale: [1, 1.08, 1] } : {}}
                   transition={{ duration: 1.6, repeat: current ? Infinity : 0 }}
                 >
                   {done ? <CheckCircle2 className="h-3.5 w-3.5" /> : <CircleDot className="h-3 w-3" />}
                 </motion.div>
-                <span className={`hidden text-[9px] uppercase sm:block ${done ? 'text-emerald-700' : 'text-slate-400'}`}>
+                <span className={`hidden text-[9px] uppercase sm:block ${done ? 'text-emerald-400' : 'text-slate-500'}`}>
                   {step.split(' ')[0]}
                 </span>
               </div>
               {i < PIPELINE.length - 1 && (
-                <div className="mx-0.5 h-px flex-1 bg-gradient-to-r from-emerald-100 to-transparent">
+                <div className="mx-0.5 h-px flex-1 bg-gradient-to-r from-slate-800 to-transparent">
                   <motion.div
-                    className="h-full bg-emerald-500/70"
+                    className="h-full bg-emerald-500"
                     initial={{ width: '0%' }}
                     animate={{ width: i < activeIndex ? '100%' : '0%' }}
                     transition={{ duration: 0.6, delay: i * 0.08 }}
@@ -82,11 +82,11 @@ function GrievanceCard({
   const isCritical = grievance.aiPriority === 'Critical' || grievance.aiPriority === 'High';
 
   const borderClass = useMemo(() => {
-    if (grievance.aiPriority === 'Critical') return 'neon-edge-crimson border-red-200';
-    if (grievance.aiPriority === 'High') return 'neon-edge-amber border-amber-200';
-    if (grievance.status === 'Resolved') return 'neon-edge-emerald border-emerald-200';
-    if (grievance.status === 'In Progress') return 'neon-edge-amber border-amber-200';
-    return 'border-emerald-100';
+    if (grievance.aiPriority === 'Critical') return 'neon-edge-crimson border-red-950/40';
+    if (grievance.aiPriority === 'High') return 'neon-edge-amber border-amber-950/40';
+    if (grievance.status === 'Resolved') return 'neon-edge-emerald border-emerald-950/40';
+    if (grievance.status === 'In Progress') return 'neon-edge-amber border-amber-950/40';
+    return 'border-slate-800';
   }, [grievance.aiPriority, grievance.status]);
 
   const handleUpvote = async (e) => {
@@ -164,17 +164,17 @@ function GrievanceCard({
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-emerald-500/0 via-transparent to-sky-500/0 opacity-0 group-hover/card:opacity-100 group-hover/card:from-emerald-500/6 group-hover/card:to-sky-500/6 transition-all duration-500 pointer-events-none" />
 
         {isCritical && grievance.aiPriority === 'Critical' && (
-          <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-red-400/16 blur-2xl" />
+          <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-red-400/10 blur-2xl" />
         )}
         
         {grievance.citizenPhoto?.url ? (
-          <div className="relative -mx-5 -mt-5 mb-4 h-36 overflow-hidden rounded-t-2xl border-b border-emerald-100/60 bg-slate-50">
+          <div className="relative -mx-5 -mt-5 mb-4 h-36 overflow-hidden rounded-t-2xl border-b border-slate-800 bg-slate-950">
             <img
               src={getImageUrl(grievance.citizenPhoto.url)}
               alt={grievance.title}
               className="h-full w-full object-cover transition-transform duration-500 group-hover/card:scale-102"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
           </div>
         ) : (
           <div className="absolute left-0 top-0 h-1 w-full bg-gradient-primary opacity-70" />
@@ -182,7 +182,7 @@ function GrievanceCard({
 
         <div className="relative z-10">
           <div className="mb-2 flex items-start justify-between gap-2">
-            <h3 className="font-space-grotesk line-clamp-2 text-base font-bold leading-snug text-slate-900">{grievance.title}</h3>
+            <h3 className="font-space-grotesk line-clamp-2 text-base font-bold leading-snug text-slate-100">{grievance.title}</h3>
             <Badge
               variant={
                 grievance.status === 'Resolved'
@@ -196,11 +196,11 @@ function GrievanceCard({
             </Badge>
           </div>
 
-          <p className="line-clamp-3 text-sm text-slate-700">{grievance.description}</p>
+          <p className="line-clamp-3 text-sm text-slate-300">{grievance.description}</p>
 
           {grievance.location && (
-            <p className="mt-2 flex items-center gap-1 text-xs text-slate-600">
-              <MapPin className="h-3.5 w-3.5 shrink-0" />
+            <p className="mt-2 flex items-center gap-1 text-xs text-slate-400">
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
               <span className="truncate">
                 {grievance.location.address?.split(',')[0] || 'Unknown'}
                 {distance !== null && Number.isFinite(distance) && (
@@ -210,17 +210,17 @@ function GrievanceCard({
             </p>
           )}
 
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-600">
-            <span className="rounded-md border border-gray-100 bg-gray-50 px-2 py-0.5 text-slate-700">
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px]">
+            <span className="rounded-md border border-slate-850 bg-slate-900/60 px-2 py-0.5 text-slate-300">
               {grievance.category || 'Unassigned'}
             </span>
             <span
               className={`rounded-md border px-2 py-0.5 ${
                 grievance.aiPriority === 'Critical'
-                  ? 'border-red-200 bg-red-50 text-red-600'
+                  ? 'border-red-500/30 bg-red-950/20 text-red-400'
                   : grievance.aiPriority === 'High'
-                    ? 'border-amber-200 bg-amber-50 text-amber-700'
-                    : 'border-emerald-100 bg-emerald-50/70 text-emerald-700'
+                    ? 'border-amber-500/30 bg-amber-950/20 text-amber-400'
+                    : 'border-emerald-500/30 bg-emerald-950/20 text-emerald-400'
               }`}
             >
               {grievance.aiPriority || 'Pending'}
@@ -237,8 +237,8 @@ function GrievanceCard({
               disabled={upvoting || isAuthority}
               className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                 isUpvoted
-                  ? 'border-emerald-300 bg-emerald-100 text-emerald-700'
-                  : 'border-emerald-100 bg-white text-slate-700 hover:border-emerald-200'
+                  ? 'border-emerald-500/50 bg-emerald-950/30 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)]'
+                  : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
               } disabled:cursor-not-allowed disabled:opacity-40`}
             >
               <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? 'fill-current' : ''}`} />
@@ -251,7 +251,7 @@ function GrievanceCard({
                 e.stopPropagation();
                 setShowDetails(true);
               }}
-              className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition"
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition"
             >
               View Details
             </button>
@@ -259,12 +259,12 @@ function GrievanceCard({
         </div>
 
         {isAuthority && (
-          <div className="relative z-10 mt-4 rounded-xl border border-gray-100 bg-white/90 p-2 backdrop-blur-sm">
-            <div className="flex items-center justify-between px-1 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+          <div className="relative z-10 mt-4 rounded-xl border border-slate-800 bg-slate-950/60 p-2 backdrop-blur-sm">
+            <div className="flex items-center justify-between px-1 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
               <span className="flex items-center gap-1">
                 <MoreHorizontal className="h-3 w-3" /> Quick actions
               </span>
-              <Zap className="h-3 w-3 text-amber-500" />
+              <Zap className="h-3 w-3 text-amber-400" />
             </div>
             <div className="flex flex-wrap gap-1">
               {['Submitted', 'In Progress', 'Resolved'].map((s) => (
@@ -273,12 +273,12 @@ function GrievanceCard({
                   type="button"
                   onClick={(e) => quickSetStatus(e, s)}
                   disabled={!!quickLoading}
-                  className={`rounded-lg px-2 py-1 text-[10px] font-semibold uppercase ${
+                  className={`rounded-lg border px-2 py-1 text-[10px] font-semibold uppercase transition ${
                     s === 'Resolved'
-                      ? 'bg-emerald-50 text-emerald-600'
+                      ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/20 hover:bg-emerald-950/60'
                       : s === 'In Progress'
-                        ? 'bg-amber-50 text-amber-700'
-                        : 'bg-gray-50 text-slate-700'
+                        ? 'bg-amber-950/40 text-amber-400 border-amber-500/20 hover:bg-amber-950/60'
+                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-850'
                   } disabled:opacity-50`}
                 >
                   {quickLoading === s ? '...' : s}
@@ -295,66 +295,66 @@ function GrievanceCard({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-emerald-950/35 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-md"
             onClick={() => setShowDetails(false)}
           >
             <motion.div
               initial={{ scale: 0.94, y: 16 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.94, y: 16 }}
-              className="glass-panel-strong max-h-[90vh] w-full max-w-lg overflow-y-auto p-6 text-slate-800"
+              className="glass-panel-strong max-h-[90vh] w-full max-w-lg overflow-y-auto p-6 text-slate-200 border border-slate-800"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="font-space-grotesk text-xl font-bold text-slate-900">{grievance.title}</h2>
-              <p className="mt-3 text-sm text-slate-700">{grievance.description}</p>
+              <h2 className="font-space-grotesk text-xl font-bold text-white">{grievance.title}</h2>
+              <p className="mt-3 text-sm text-slate-300 leading-relaxed">{grievance.description}</p>
 
-              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+              <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <span className="text-slate-500">Department</span>
-                    <p className="text-slate-700">{grievance.category}</p>
+                  <span className="text-slate-400 block font-semibold">Department</span>
+                  <p className="text-slate-200 font-medium mt-0.5">{grievance.category}</p>
                 </div>
                 <div>
-                  <span className="text-slate-500">Priority</span>
-                    <p className="text-slate-700">{grievance.aiPriority}</p>
+                  <span className="text-slate-400 block font-semibold">Priority</span>
+                  <p className="text-slate-200 font-medium mt-0.5">{grievance.aiPriority}</p>
                 </div>
                 <div>
-                  <span className="text-slate-500">Status</span>
-                    <p className="text-slate-700">{grievance.status}</p>
+                  <span className="text-slate-400 block font-semibold">Status</span>
+                  <p className="text-slate-200 font-medium mt-0.5">{grievance.status}</p>
                 </div>
                 <div>
-                  <span className="text-slate-500">Solved proof</span>
-                    <p className="text-slate-700">{grievance.resolutionPhoto?.url ? 'Uploaded' : 'Required to resolve'}</p>
+                  <span className="text-slate-400 block font-semibold">Solved proof</span>
+                  <p className="text-slate-200 font-medium mt-0.5">{grievance.resolutionPhoto?.url ? 'Uploaded' : 'Required to resolve'}</p>
                 </div>
                 <div>
-                  <span className="text-slate-500">Signals</span>
-                    <p className="text-slate-700">{localUpvotes}</p>
+                  <span className="text-slate-400 block font-semibold">Signals</span>
+                  <p className="text-slate-200 font-medium mt-0.5">{localUpvotes} boosts</p>
                 </div>
               </div>
 
               {grievance.summary && (
-                <p className="mt-4 text-sm text-slate-700">
-                  <span className="font-semibold text-slate-900">AI summary · </span>
-                  {grievance.summary}
-                </p>
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/10 p-3 mt-4 text-xs text-slate-300">
+                  <span className="font-bold text-emerald-400 block mb-1">AI summary</span>
+                  <p className="leading-relaxed">{grievance.summary}</p>
+                </div>
               )}
 
               {grievance.location?.address && (
-                <p className="mt-2 text-sm text-slate-600">
-                  <span className="text-emerald-700">Location · </span>
-                  {grievance.location.address}
-                </p>
+                <div className="mt-4 text-xs text-slate-300">
+                  <span className="text-emerald-400 font-bold block mb-1">Location</span>
+                  <p className="text-slate-400 leading-relaxed">{grievance.location.address}</p>
+                </div>
               )}
 
               <LiveTrace status={grievance.status} />
 
               {grievance.citizenPhoto?.url && (
-                <div className="mt-4 overflow-hidden rounded-xl border border-emerald-100 bg-white">
+                <div className="mt-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
                   <img
                     src={getImageUrl(grievance.citizenPhoto.url)}
                     alt="Grievance proof"
                     className="max-h-64 w-full object-cover"
                   />
-                  <p className="px-3 py-2 text-xs text-slate-500">
+                  <p className="px-3 py-2 text-[10px] text-slate-500">
                     Citizen photo proof
                     {grievance.citizenPhoto.uploadedAt
                       ? ` · ${new Date(grievance.citizenPhoto.uploadedAt).toLocaleString('en-IN')}`
@@ -364,13 +364,13 @@ function GrievanceCard({
               )}
 
               {grievance.resolutionPhoto?.url && (
-                <div className="mt-4 overflow-hidden rounded-xl border border-emerald-100 bg-white">
+                <div className="mt-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
                   <img
                     src={getImageUrl(grievance.resolutionPhoto.url)}
                     alt="Solved proof"
                     className="max-h-64 w-full object-cover"
                   />
-                  <p className="px-3 py-2 text-xs text-slate-500">
+                  <p className="px-3 py-2 text-[10px] text-slate-500">
                     Solved photo proof
                     {grievance.resolutionPhoto.uploadedAt
                       ? ` · ${new Date(grievance.resolutionPhoto.uploadedAt).toLocaleString('en-IN')}`

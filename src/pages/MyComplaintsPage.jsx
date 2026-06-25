@@ -201,47 +201,47 @@ function MyComplaintsPage({ onNavigate }) {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 30 }}
               transition={{ duration: 0.3 }}
-              className="w-full max-w-2xl rounded-2xl glass-panel p-6 relative shadow-lg text-slate-800"
+              className="w-full max-w-2xl rounded-2xl glass-panel p-6 relative shadow-lg text-slate-200"
             >
               <button
                 onClick={() => setSelectedComplaint(null)}
-                className="absolute top-3 right-3 text-slate-400 hover:text-slate-900 text-lg"
+                className="absolute top-3 right-3 text-slate-400 hover:text-white text-lg"
               >
                 ✖
               </button>
 
-              <h2 className="text-2xl font-semibold mb-3 text-slate-900">{selectedComplaint.title}</h2>
-              <p className="text-slate-700 text-sm mb-4">{selectedComplaint.description}</p>
+              <h2 className="text-2xl font-semibold mb-3 text-white">{selectedComplaint.title}</h2>
+              <p className="text-slate-300 text-sm mb-4">{selectedComplaint.description}</p>
 
-              <p className="text-sm text-slate-700 mb-3">
-                <strong className="text-slate-900">🧠 AI Summary:</strong>{" "}
+              <p className="text-sm text-slate-300 mb-3">
+                <strong className="text-slate-100">🧠 AI Summary:</strong>{" "}
                 {selectedComplaint.summary || "AI is still analyzing this grievance..."}
               </p>
 
               {selectedComplaint.location && selectedComplaint.location.address && (
-                <p className="text-sm text-slate-700 mb-3">
-                  <strong className="text-slate-900">📍 Location:</strong>{" "}
+                <p className="text-sm text-slate-300 mb-3">
+                  <strong className="text-slate-100">📍 Location:</strong>{" "}
                   {selectedComplaint.location.address}
                 </p>
               )}
 
-              <p className="text-sm text-slate-700">
-                <strong className="text-slate-900">⚡ Priority:</strong>{" "}
+              <p className="text-sm text-slate-300">
+                <strong className="text-slate-100">⚡ Priority:</strong>{" "}
                 {selectedComplaint.aiPriority || "Pending"}
               </p>
-              <p className="text-sm text-slate-700">
-                <strong className="text-slate-900">🏢 Department:</strong>{" "}
+              <p className="text-sm text-slate-300">
+                <strong className="text-slate-100">🏢 Department:</strong>{" "}
                 {selectedComplaint.category || "Unassigned"}
               </p>
 
               {selectedComplaint.citizenPhoto?.url && (
-                <div className="mt-4 overflow-hidden rounded-xl border border-emerald-100 bg-white">
+                <div className="mt-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80">
                   <img
                     src={getImageUrl(selectedComplaint.citizenPhoto.url)}
                     alt="Grievance proof"
                     className="max-h-72 w-full object-cover"
                   />
-                  <p className="px-3 py-2 text-xs text-slate-500">
+                  <p className="px-3 py-2 text-xs text-slate-400">
                     Citizen photo proof
                     {selectedComplaint.citizenPhoto.uploadedAt
                       ? ` · ${new Date(selectedComplaint.citizenPhoto.uploadedAt).toLocaleString("en-IN")}`
@@ -251,13 +251,13 @@ function MyComplaintsPage({ onNavigate }) {
               )}
 
               {selectedComplaint.resolutionPhoto?.url && (
-                <div className="mt-4 overflow-hidden rounded-xl border border-emerald-100 bg-white">
+                <div className="mt-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80">
                   <img
                     src={getImageUrl(selectedComplaint.resolutionPhoto.url)}
                     alt="Solved proof"
                     className="max-h-72 w-full object-cover"
                   />
-                  <p className="px-3 py-2 text-xs text-slate-500">
+                  <p className="px-3 py-2 text-xs text-slate-400">
                     Solved photo proof
                     {selectedComplaint.resolutionPhoto.uploadedAt
                       ? ` · ${new Date(selectedComplaint.resolutionPhoto.uploadedAt).toLocaleString("en-IN")}`
