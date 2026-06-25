@@ -10,7 +10,16 @@ const app = express();
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "http://localhost:5174";
 
 const corsOptions = {
-  origin: CLIENT_ORIGIN,
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    const isLocal = /^http:\/\/localhost:\d+$/.test(origin);
+    const isClient = origin === CLIENT_ORIGIN;
+    if (isLocal || isClient) {
+      callback(null, true);
+    } else {
+      callback(null, false); // Block other origins safely without throwing Express exceptions
+    }
+  },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-auth-token"],
   credentials: false,
