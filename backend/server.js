@@ -36,17 +36,30 @@ app.use((req, res, next) => {
   next();
 });
 
+const { log } = require("./logger");
+
 const db = process.env.MONGO_URI;
 if (!db) {
   console.error("MONGO_URI is missing in .env");
   process.exit(1);
 }
 
+log("Attempting database connection...");
+mongoose.connection.on("connected", () => {
+  log("Mongoose connection established successfully.");
+});
+mongoose.connection.on("error", (err) => {
+  log(`Mongoose connection error: ${err.message}\nStack: ${err.stack}`);
+});
+mongoose.connection.on("disconnected", () => {
+  log("Mongoose disconnected from database.");
+});
+
 mongoose
   .connect(db)
-  .then(() => console.log("MongoDB Connected..."))
+  .then(() => log("MongoDB Connected promise resolved."))
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
+    log(`MongoDB connection error in promise: ${err.message}\nStack: ${err.stack}`);
     process.exit(1);
   });
 

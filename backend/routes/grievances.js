@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Grievance = require('../models/Grievance');
 const User = require('../models/User');
+const { log, logFile } = require('../logger');
 
 const ALL_CATEGORIES = [
   'Roads & Infrastructure',
@@ -144,11 +145,34 @@ router.get('/', attachUser, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch grievances' });
   }
 });
-router.get('/test-debug', async (req, res) => {
-  const logs = [];
-  logs.push('Start');
+router.get('/crash-log', (req, res) => {
+  const fs = require('fs');
+  if (fs.existsSync(logFile)) {
+    const content = fs.readFileSync(logFile, 'utf8');
+    res.type('text/plain').send(content);
+  } else {
+    res.send('No crash log found.');
+  }
+});
+
+router.get('/clear-log', (req, res) => {
+  const fs = require('fs');
   try {
-    logs.push('Creating new Grievance instance');
+    if (fs.existsSync(logFile)) {
+      fs.unlinkSync(logFile);
+      res.send('Log cleared.');
+    } else {
+      res.send('No log file to clear.');
+    }
+  } catch (err) {
+    res.status(500).send(`Failed to clear log: ${err.message}`);
+  }
+});
+
+router.get('/test-debug', async (req, res) => {
+  log('Starting /test-debug request');
+  try {
+    log('Creating test Grievance object...');
     const newGrievance = new Grievance({
       title: 'Test Title Debug',
       description: 'Test description debug that is long enough.',
@@ -163,15 +187,13 @@ router.get('/test-debug', async (req, res) => {
         longitude: 75.84
       }
     });
-    logs.push('Grievance instance created');
-    
-    logs.push('Saving Grievance');
+    log('Grievance object created. Saving...');
     const saved = await newGrievance.save();
-    logs.push('Grievance saved successfully');
-    return res.json({ success: true, logs, saved });
+    log('Grievance saved successfully!');
+    return res.json({ success: true, saved });
   } catch (err) {
-    logs.push(`Error caught: ${err.message}`);
-    return res.json({ success: false, logs, error: err.stack });
+    log(`Error caught in /test-debug: ${err.message}\nStack: ${err.stack}`);
+    return res.status(500).json({ success: false, error: err.message, stack: err.stack });
   }
 });
 
@@ -181,35 +203,47 @@ router.get('/test-debug', async (req, res) => {
  * @access  Public
  */
 router.post('/', async (req, res) => {
+  log(`POST /api/grievances request received. Body keys: ${Object.keys(req.body || {}).join(', ')}`);
   try {
     const { title, description, category, aiPriority, summary, submitterUserId, submitterName, location, citizenPhoto } = req.body;
 
     // Input validation
     if (!title || !description || !submitterUserId) {
+      log('Validation failed: missing title, description, or submitterUserId');
       return res.status(400).json({ error: 'Title, description, and submitterUserId are required' });
     }
 
     if (title.length < 5 || title.length > 200) {
+      log(`Validation failed: title length ${title.length}`);
       return res.status(400).json({ error: 'Title must be 5-200 characters' });
     }
 
     if (description.length < 10 || description.length > 2000) {
+      log(`Validation failed: description length ${description.length}`);
       return res.status(400).json({ error: 'Description must be 10-2000 characters' });
     }
 
+    log('Validations passed. Processing photo if present...');
     let citizenPhotoUrl = '';
     if (citizenPhoto) {
+      log('Processing citizenPhoto...');
       citizenPhotoUrl = saveBase64Image(citizenPhoto);
+      log(`Processed citizenPhoto. Url: ${citizenPhotoUrl}`);
     }
 
     let resolvedSubmitterName = submitterName || 'Anonymous';
     if (submitterUserId && mongoose.Types.ObjectId.isValid(submitterUserId)) {
+      log(`Resolving submitterName for userId: ${submitterUserId}`);
       const user = await User.findById(submitterUserId).select('firstName lastName').lean();
       if (user) {
         resolvedSubmitterName = `${user.firstName} ${user.lastName}`;
+        log(`Resolved name: ${resolvedSubmitterName}`);
+      } else {
+        log('User not found by id.');
       }
     }
 
+    log('Creating new Grievance Mongoose model instance...');
     const newGrievance = new Grievance({
       title: title.trim(),
       description: description.trim(),
@@ -222,10 +256,12 @@ router.post('/', async (req, res) => {
       citizenPhoto: citizenPhotoUrl ? { url: citizenPhotoUrl, uploadedAt: new Date() } : undefined
     });
 
+    log('Grievance instance created. Saving to MongoDB...');
     const savedGrievance = await newGrievance.save();
+    log('Grievance saved successfully to MongoDB.');
     res.status(201).json(savedGrievance);
   } catch (err) {
-    console.error('Error creating grievance:', err);
+    log(`Error caught in POST /: ${err.message}\nStack: ${err.stack}`);
     res.status(500).json({ error: 'Failed to create grievance' });
   }
 });
