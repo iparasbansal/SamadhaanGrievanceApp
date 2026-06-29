@@ -36,7 +36,7 @@ const AI_DEPARTMENT_MAPPING = {
 const KEYWORD_RULES = [
   {
     category: 'Emergency Services',
-    words: ['fire', 'ambulance', 'accident', 'collapse', 'medical emergency', 'rescue', 'flood', 'gas leak', 'kill', 'stab', 'weapon', 'dying', 'dead'],
+    words: ['fire outbreak', 'fire breakout', 'building fire', 'house fire', 'cylinder blast', 'major fire', 'burning', 'ambulance', 'accident', 'collapse', 'medical emergency', 'rescue', 'flood', 'gas leak', 'kill', 'stab', 'weapon', 'dying', 'dead'],
   },
   {
     category: 'Public Safety',
@@ -61,7 +61,7 @@ const KEYWORD_RULES = [
 ];
 
 const PRIORITY_RULES = [
-  { priority: 'Critical', words: ['fire', 'accident', 'collapse', 'gas leak', 'electrocution', 'medical emergency', 'danger', 'kill', 'fighting', 'fight', 'stab', 'dying', 'dead', 'weapon'] },
+  { priority: 'Critical', words: ['fire outbreak', 'fire breakout', 'building fire', 'house fire', 'cylinder blast', 'major fire', 'burning', 'accident', 'collapse', 'gas leak', 'electrocution', 'medical emergency', 'danger', 'kill', 'fighting', 'fight', 'stab', 'dying', 'dead', 'weapon'] },
   { priority: 'High', words: ['unsafe', 'overflow', 'contaminated', 'major', 'blocked', 'outage', 'leak', 'assault', 'attack', 'threat'] },
   { priority: 'Medium', words: ['broken', 'damaged', 'delay', 'not working', 'dirty', 'harassment', 'abuse'] },
 ];
