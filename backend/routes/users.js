@@ -118,4 +118,58 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// @route   POST api/users/forgot-password
+// @desc    Simulate sending a password reset email
+router.post('/forgot-password', async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).json({ msg: 'Please enter your email address' });
+    }
+
+    try {
+        const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
+        if (!user) {
+            return res.status(404).json({ msg: 'User with this email does not exist' });
+        }
+
+        // Return a mock reset token / link
+        res.json({
+            msg: 'Password reset link sent to your email (simulated).',
+            email: user.email,
+            resetEnabled: true
+        });
+    } catch (err) {
+        console.error("Forgot Password Error:", err.message);
+        res.status(500).json({ msg: 'Server error during password reset request' });
+    }
+});
+
+// @route   POST api/users/reset-password
+// @desc    Directly reset password
+router.post('/reset-password', async (req, res) => {
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+        return res.status(400).json({ msg: 'Please enter all fields' });
+    }
+    if (newPassword.length < 6) {
+        return res.status(400).json({ msg: 'Password must be at least 6 characters' });
+    }
+
+    try {
+        const user = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
+        if (!user) {
+            return res.status(404).json({ msg: 'User does not exist' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+        await user.save();
+
+        res.json({ msg: 'Password reset successfully. You can now sign in.' });
+    } catch (err) {
+        console.error("Reset Password Error:", err.message);
+        res.status(500).json({ msg: 'Server error during password reset' });
+    }
+});
+
 module.exports = router;

@@ -22,7 +22,7 @@ async function request(endpoint, options = {}) {
   }
 
   if (!res.ok) {
-    throw new Error(data?.message || data?.error || `Request failed (${res.status})`);
+    throw new Error(data?.message || data?.error || data?.msg || `Request failed (${res.status})`);
   }
 
   return data;
@@ -98,5 +98,19 @@ export const askChatbot = (messages, userContext) => {
   return request("/ai/chat", {
     method: "POST",
     body: JSON.stringify({ messages, userContext }),
+  });
+};
+
+export const forgotPassword = (email) => {
+  return request("/users/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+};
+
+export const resetPassword = (email, newPassword) => {
+  return request("/users/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ email, newPassword }),
   });
 };
