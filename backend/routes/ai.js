@@ -108,16 +108,23 @@ async function fetchWithBackoff(url, options, retries = 5, delay = 1000) {
   try {
     const response = await fetch(url, options);
     if (!response.ok) {
+      const errText = await response.text();
+      let errMsg = errText;
+      try {
+        const errJson = JSON.parse(errText);
+        errMsg = errJson?.error?.message || errText;
+      } catch (e) {}
+
       if (response.status === 429 && retries > 0) {
         console.warn(`⚠️ Gemini rate limit hit. Retrying in ${delay / 1000}s...`);
         await new Promise((res) => setTimeout(res, delay));
         return fetchWithBackoff(url, options, retries - 1, delay * 2);
       }
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`Gemini API Error (status ${response.status}): ${errMsg}`);
     }
     return await response.json();
   } catch (error) {
-    if (retries > 0) {
+    if (retries > 0 && (!error.message || !error.message.includes('Gemini API Error'))) {
       console.warn(`⚠️ Network error: ${error.message}. Retrying in ${delay / 1000}s...`);
       await new Promise((res) => setTimeout(res, delay));
       return fetchWithBackoff(url, options, retries - 1, delay * 2);
@@ -303,7 +310,7 @@ ${contextStr}
     return res.json({ reply: rawReply });
   } catch (error) {
     console.error('❌ AI Chat failed:', error.message);
-    return res.status(500).json({ error: 'Chat service failed to respond. Please try again.' });
+    return res.status(500).json({ error: error.message || 'Chat service failed to respond. Please try again.' });
   }
 });
 
