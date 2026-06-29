@@ -213,6 +213,11 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Title, description, and submitterUserId are required' });
     }
 
+    if (!citizenPhoto) {
+      log('Validation failed: missing citizenPhoto');
+      return res.status(400).json({ error: 'Upload of a proof photo is compulsory to submit a grievance' });
+    }
+
     if (title.length < 5 || title.length > 200) {
       log(`Validation failed: title length ${title.length}`);
       return res.status(400).json({ error: 'Title must be 5-200 characters' });

@@ -297,6 +297,7 @@ function AuthPage() {
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   icon={Smartphone}
+                  required
                 />
 
                 <FormInput

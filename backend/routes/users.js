@@ -10,8 +10,8 @@ router.post('/register', async (req, res) => {
     const { firstName, lastName, email, password, mobile, departmentCode } = req.body;
 
     // 1. Validation
-    if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({ msg: 'Please enter all required fields' });
+    if (!firstName || !lastName || !email || !password || !mobile) {
+        return res.status(400).json({ msg: 'Please enter all required fields including mobile number' });
     }
 
     try {
@@ -19,6 +19,12 @@ router.post('/register', async (req, res) => {
         const userExists = await User.findOne({ email: new RegExp(`^${email}$`, 'i') });
         if (userExists) {
             return res.status(400).json({ msg: 'User already exists' });
+        }
+
+        // Check if mobile number is already registered
+        const mobileExists = await User.findOne({ mobile });
+        if (mobileExists) {
+            return res.status(400).json({ msg: 'An account with this mobile number already exists' });
         }
 
         // Determine role and departmentId backend-side

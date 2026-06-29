@@ -92,6 +92,10 @@ function SubmitGrievancePage({ onGrievanceSubmitted }) {
       setModal({ show: true, title: "Location Missing", message: "Please map the location of the grievance.", type: "error" });
       return;
     }
+    if (!citizenPhoto) {
+      setModal({ show: true, title: "Photo Required", message: "A photo of the grievance is mandatory for validation and security checks.", type: "error" });
+      return;
+    }
     setLoading(true);
 
     try {
@@ -205,12 +209,12 @@ function SubmitGrievancePage({ onGrievanceSubmitted }) {
 
           {/* Citizen Photo Upload */}
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Attach Photo Proof (Optional)</label>
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Attach Photo Proof <span className="text-red-500 font-extrabold">*</span></label>
             <div className="flex flex-col gap-3">
               <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-emerald-100 bg-white px-4 py-3.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-50">
                 <Image className="h-4.5 w-4.5 text-emerald-600" />
-                {citizenPhotoName ? citizenPhotoName : "Upload image of the issue"}
-                <input type="file" accept="image/*" onChange={handlePhotoSelect} className="sr-only" />
+                {citizenPhotoName ? citizenPhotoName : "Capture/Upload image of the issue"}
+                <input type="file" accept="image/*" capture="environment" onChange={handlePhotoSelect} className="sr-only" />
               </label>
 
               {citizenPhotoPreview && (
