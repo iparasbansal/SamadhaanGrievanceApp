@@ -36,11 +36,11 @@ const AI_DEPARTMENT_MAPPING = {
 const KEYWORD_RULES = [
   {
     category: 'Emergency Services',
-    words: ['fire', 'ambulance', 'accident', 'collapse', 'medical emergency', 'rescue', 'flood', 'gas leak'],
+    words: ['fire', 'ambulance', 'accident', 'collapse', 'medical emergency', 'rescue', 'flood', 'gas leak', 'kill', 'stab', 'weapon', 'dying', 'dead'],
   },
   {
     category: 'Public Safety',
-    words: ['crime', 'theft', 'violence', 'harassment', 'street light broken', 'unsafe', 'police', 'security'],
+    words: ['crime', 'theft', 'violence', 'harassment', 'street light broken', 'unsafe', 'police', 'security', 'fight', 'fighting', 'assault', 'attack', 'threat', 'abuse'],
   },
   {
     category: 'Water Supply',
@@ -61,9 +61,9 @@ const KEYWORD_RULES = [
 ];
 
 const PRIORITY_RULES = [
-  { priority: 'Critical', words: ['fire', 'accident', 'collapse', 'gas leak', 'electrocution', 'medical emergency', 'danger'] },
-  { priority: 'High', words: ['unsafe', 'overflow', 'contaminated', 'major', 'blocked', 'outage', 'leak'] },
-  { priority: 'Medium', words: ['broken', 'damaged', 'delay', 'not working', 'dirty'] },
+  { priority: 'Critical', words: ['fire', 'accident', 'collapse', 'gas leak', 'electrocution', 'medical emergency', 'danger', 'kill', 'fighting', 'fight', 'stab', 'dying', 'dead', 'weapon'] },
+  { priority: 'High', words: ['unsafe', 'overflow', 'contaminated', 'major', 'blocked', 'outage', 'leak', 'assault', 'attack', 'threat'] },
+  { priority: 'Medium', words: ['broken', 'damaged', 'delay', 'not working', 'dirty', 'harassment', 'abuse'] },
 ];
 
 function normalizeCategory(category) {
