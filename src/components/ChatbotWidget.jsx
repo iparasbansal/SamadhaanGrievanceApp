@@ -62,7 +62,7 @@ export default function ChatbotWidget() {
         ...prev,
         {
           role: 'assistant',
-          content: "Sorry, I am having trouble connecting to my brain database. Please check your internet connection and try again."
+          content: err.message || "Sorry, I am having trouble connecting to the AI helper. Please try again later."
         }
       ]);
     } finally {
