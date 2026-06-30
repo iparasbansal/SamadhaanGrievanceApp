@@ -160,7 +160,7 @@ router.post('/analyze', async (req, res) => {
     if (!apiKey) {
       return res.json(fallbackAnalysis);
     }
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const validDepartments = ALL_CATEGORIES.join(', ');
 
@@ -245,7 +245,7 @@ router.post('/chat', async (req, res) => {
       });
     }
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     // Construct user contexts
     let contextStr = '';
