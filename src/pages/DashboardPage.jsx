@@ -498,6 +498,45 @@ function DashboardPage() {
     address: 'Fetching location…',
   });
 
+  const [placeholder, setPlaceholder] = useState('');
+
+  useEffect(() => {
+    const placeholderTexts = ['Query: water outage', 'Query: road hazard', 'Query: critical', 'Filter by department'];
+    let index = 0;
+    let isDeleting = false;
+    let text = '';
+    let interval;
+    
+    const tick = () => {
+      const current = placeholderTexts[index % placeholderTexts.length];
+      if (!isDeleting) {
+        text = current.slice(0, text.length + 1);
+        setPlaceholder(text);
+        if (text === current) {
+          isDeleting = true;
+          clearInterval(interval);
+          setTimeout(() => {
+            interval = setInterval(tick, 40);
+          }, 900);
+        }
+      } else {
+        text = text.slice(0, -1);
+        setPlaceholder(text);
+        if (text === '') {
+          isDeleting = false;
+          index++;
+          clearInterval(interval);
+          setTimeout(() => {
+            interval = setInterval(tick, 80);
+          }, 500);
+        }
+      }
+    };
+    
+    interval = setInterval(tick, 80);
+    return () => clearInterval(interval);
+  }, []);
+
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
@@ -711,8 +750,8 @@ function DashboardPage() {
 
       const matchesSearch =
         !filters.search ||
-        g.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        g.category.toLowerCase().includes(filters.search.toLowerCase()) ||
+        (g.title || '').toLowerCase().includes(filters.search.toLowerCase()) ||
+        (g.category || '').toLowerCase().includes(filters.search.toLowerCase()) ||
         (g.aiPriority || '').toLowerCase().includes(filters.search.toLowerCase());
       return matchesStatus && matchesCategory && matchesPriority && matchesTime && matchesSearch;
     })
@@ -788,18 +827,9 @@ function DashboardPage() {
               type="text"
               value={filters.search || ''}
               onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+              placeholder={placeholder}
               className="input-dark w-full py-3 pl-4 pr-10"
             />
-            {(!filters.search || filters.search.trim() === '') && (
-              <span className="pointer-events-none absolute left-4 top-3 text-sm text-slate-500">
-                <TypingText
-                  texts={['Query: water outage', 'Query: road hazard', 'Query: critical', 'Filter by department']}
-                  typingSpeed={80}
-                  deletingSpeed={40}
-                  pauseTime={900}
-                />
-              </span>
-            )}
           </div>
           </div>
         </div>
