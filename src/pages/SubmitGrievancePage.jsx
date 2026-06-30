@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useAuth } from "../context/AuthContext";
-import { createGrievance } from "../services/api";
+import { createGrievance, checkDuplicates } from "../services/api";
 import { analyzeGrievanceWithAI } from "../services/gemini";
 import { Button, Input, Textarea, Modal } from "../components/ui";
 import MapPickerModal from "../components/MapPickerModal";
@@ -55,6 +55,31 @@ function SubmitGrievancePage({ onGrievanceSubmitted }) {
   // AI Assist States
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [duplicateGrievances, setDuplicateGrievances] = useState([]);
+
+  // Check for duplicate grievances nearby
+  useEffect(() => {
+    if (!location || !aiSuggestions || !aiSuggestions.category || title.trim().length < 5) {
+      setDuplicateGrievances([]);
+      return;
+    }
+
+    const check = async () => {
+      try {
+        const { duplicates } = await checkDuplicates(
+          aiSuggestions.category,
+          location.latitude,
+          location.longitude,
+          title
+        );
+        setDuplicateGrievances(duplicates || []);
+      } catch (err) {
+        console.error("Error checking duplicates:", err);
+      }
+    };
+
+    check();
+  }, [location, aiSuggestions, title]);
 
   // Debounced real-time AI classification
   useEffect(() => {
@@ -66,7 +91,7 @@ function SubmitGrievancePage({ onGrievanceSubmitted }) {
     setAiLoading(true);
     const handler = setTimeout(async () => {
       try {
-        const data = await analyzeGrievanceWithAI(title, description);
+        const data = await analyzeGrievanceWithAI(title, description, citizenPhoto);
         setAiSuggestions(data);
       } catch (err) {
         console.error("AI Assist error:", err);
@@ -76,7 +101,7 @@ function SubmitGrievancePage({ onGrievanceSubmitted }) {
     }, 1500);
 
     return () => clearTimeout(handler);
-  }, [title, description]);
+  }, [title, description, citizenPhoto]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,7 +127,7 @@ function SubmitGrievancePage({ onGrievanceSubmitted }) {
       // Use pre-fetched AI predictions if available, else fetch fresh
       let aiData = aiSuggestions;
       if (!aiData) {
-        aiData = await analyzeGrievanceWithAI(title, description);
+        aiData = await analyzeGrievanceWithAI(title, description, citizenPhoto);
       }
 
       const newGrievance = {
@@ -291,6 +316,46 @@ function SubmitGrievancePage({ onGrievanceSubmitted }) {
                       </div>
                     )
                   )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Duplicate Warnings */}
+          <AnimatePresence>
+            {duplicateGrievances.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, scale: 0.96 }}
+                animate={{ opacity: 1, height: "auto", scale: 1 }}
+                exit={{ opacity: 0, height: 0, scale: 0.96 }}
+                transition={{ type: "spring", stiffness: 300, damping: 23 }}
+                className="overflow-hidden origin-top"
+              >
+                <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4 space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-amber-600 animate-pulse" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                      Similar complaints nearby ({duplicateGrievances.length})
+                    </span>
+                  </div>
+                  <p className="text-slate-600 text-xs leading-normal">
+                    Other citizens have already filed similar reports nearby. You can search or upvote them on the home screen to increase their urgency rather than filing a new duplicate:
+                  </p>
+                  <div className="space-y-1.5 max-h-36 overflow-y-auto mt-1">
+                    {duplicateGrievances.map((dup) => (
+                      <div key={dup.id} className="bg-white border border-amber-100 p-2.5 rounded-lg flex items-center justify-between text-xs gap-3">
+                        <div className="min-w-0">
+                          <span className="font-semibold text-slate-800 block truncate">{dup.title}</span>
+                          <span className="text-[10px] text-slate-400 block mt-0.5">
+                            📍 {dup.address} ({dup.distanceKm} km away)
+                          </span>
+                        </div>
+                        <div className="shrink-0 flex items-center gap-1 bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md font-bold text-[10px]">
+                          ⚡ Upvotes: {dup.upvotes}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             )}

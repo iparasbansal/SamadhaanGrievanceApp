@@ -197,6 +197,82 @@ router.get('/test-debug', async (req, res) => {
   }
 });
 
+function getDistanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; // Distance in km
+  return d;
+}
+
+/**
+ * @route   POST /api/grievances/check-duplicates
+ * @desc    Check for potential duplicate grievances nearby
+ * @access  Public
+ */
+router.post('/check-duplicates', async (req, res) => {
+  try {
+    const { category, latitude, longitude, title } = req.body;
+    if (!latitude || !longitude || !category) {
+      return res.status(400).json({ error: 'category, latitude, and longitude are required' });
+    }
+
+    // Fetch all unresolved complaints of the same category
+    const grievances = await Grievance.find({
+      category: normalizeCategory(category),
+      status: { $in: ['Submitted', 'In Progress'] }
+    }).lean();
+
+    const duplicates = [];
+    const keywords = (title || '').toLowerCase().split(/\s+/).filter(w => w.length > 3);
+
+    for (const g of grievances) {
+      if (!g.location || !g.location.latitude || !g.location.longitude) continue;
+      
+      const dist = getDistanceKm(
+        latitude,
+        longitude,
+        g.location.latitude,
+        g.location.longitude
+      );
+
+      // Within 1.5 km
+      if (dist <= 1.5) {
+        let titleMatch = false;
+        if (keywords.length > 0) {
+          const gTitleLower = g.title.toLowerCase();
+          titleMatch = keywords.some(keyword => gTitleLower.includes(keyword));
+        }
+
+        // Match if keywords overlap OR if they are super close (within 300m) regardless of title
+        if (titleMatch || dist <= 0.3) {
+          duplicates.push({
+            id: g._id,
+            title: g.title,
+            status: g.status,
+            distanceKm: parseFloat(dist.toFixed(2)),
+            address: g.location.address,
+            upvotes: g.upvotes
+          });
+        }
+      }
+    }
+
+    // Sort by proximity
+    duplicates.sort((a, b) => a.distanceKm - b.distanceKm);
+
+    return res.json({ duplicates });
+  } catch (err) {
+    console.error('Error checking duplicates:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 /**
  * @route   POST /api/grievances
  * @desc    Create a new grievance

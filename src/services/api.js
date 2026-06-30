@@ -101,6 +101,13 @@ export const askChatbot = (messages, userContext) => {
   });
 };
 
+export const checkDuplicates = (category, latitude, longitude, title) => {
+  return request("/grievances/check-duplicates", {
+    method: "POST",
+    body: JSON.stringify({ category, latitude, longitude, title }),
+  });
+};
+
 export const forgotPassword = (email) => {
   return request("/users/forgot-password", {
     method: "POST",

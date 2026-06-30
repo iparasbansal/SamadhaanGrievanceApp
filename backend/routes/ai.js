@@ -92,6 +92,18 @@ function buildFallbackAnalysis(title, description) {
   };
 }
 
+function parseBase64Image(dataUrl) {
+  if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
+    return null;
+  }
+  const match = dataUrl.match(/^data:(image\/\w+);base64,(.*)$/);
+  if (!match) return null;
+  return {
+    mimeType: match[1],
+    data: match[2]
+  };
+}
+
 function parseJsonFromModel(text) {
   if (!text) throw new Error('Empty AI response');
   const cleaned = text.replace(/```json/i, '').replace(/```/g, '').trim();
@@ -140,7 +152,7 @@ async function fetchWithBackoff(url, options, retries = 5, delay = 1000) {
  */
 router.post('/analyze', async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, citizenPhoto } = req.body;
 
     // Input validation
     if (!title || !description) {
@@ -166,12 +178,12 @@ router.post('/analyze', async (req, res) => {
 
     const systemPrompt = `
 You are an AI assistant for a public grievance portal.
-Analyze the grievance based on the title and description.
+Analyze the grievance based on the title, description, and optional photo proof.
 
 Decide and return:
 1️⃣ **aiPriority** — one of: "Critical", "High", "Medium", or "Low".
 2️⃣ **category** — the department that should handle it. MUST be one of the following exact strings: ${validDepartments}. If the issue doesn't clearly fit, use "Other".
-3️⃣ **summary** — a short 1–2 sentence natural-language summary (20–30 words) describing the main issue and urgency clearly.
+3️⃣ **summary** — a short 1–2 sentence natural-language summary (20–30 words) describing the main issue and urgency clearly. If a photo proof is attached, mention or confirm the visual evidence in your summary.
 
 ⚠️ Always return valid JSON only.
 `;
@@ -179,6 +191,7 @@ Decide and return:
     const userQuery = `
 Grievance Title: "${title}"
 Grievance Description: "${description}"
+${citizenPhoto ? "A photo proof of the issue is attached." : ""}
 
 Return valid JSON ONLY like:
 {
@@ -196,6 +209,18 @@ Return valid JSON ONLY like:
         },
       ],
     };
+
+    if (citizenPhoto) {
+      const parsedImage = parseBase64Image(citizenPhoto);
+      if (parsedImage) {
+        payload.contents[0].parts.push({
+          inlineData: {
+            mimeType: parsedImage.mimeType,
+            data: parsedImage.data
+          }
+        });
+      }
+    }
 
     const data = await fetchWithBackoff(apiUrl, {
       method: 'POST',

@@ -3,11 +3,11 @@ import { request } from './api.js';
 /**
  * 🧠 Analyzes the grievance using Gemini AI (via backend)
  */
-export async function analyzeGrievanceWithAI(title, description) {
+export async function analyzeGrievanceWithAI(title, description, citizenPhoto = null) {
   try {
     const result = await request('/ai/analyze', {
       method: 'POST',
-      body: JSON.stringify({ title, description }),
+      body: JSON.stringify({ title, description, citizenPhoto }),
     });
 
     return {
