@@ -1,1 +1,27 @@
-node_modules
+# Ignore node_modules in any directory
+**/node_modules/
+node_modules/
+
+# Ignore production builds
+**/dist/
+dist/
+
+# Ignore local environment variables
+**/.env
+**/.env.production
+.env
+.env.production
+
+# Ignore OS metadata
+**/.DS_Store
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+crash.log
+backend/crash.log
+
+# Ignore local user uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
